@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lsun.bbs171.repository.UserRepository">
+    <select id="findAll" resultType="User">
+        select *
+        from user
+    </select>
+
+    <select id="findById" parameterType="java.lang.Long" resultType="User">
+        select *
+        from user
+        where id = #{id}
+    </select>
+
+    <insert id="save" parameterType="User">
+        INSERT INTO user(phone, username, password, gender, avatar)
+        VALUES (#{phone}, #{username}, #{password}, #{gender}, #{avatar})
+    </insert>
+
+    <!--    TODO-->
+    <update id="update" parameterType="User">
+        update user
+        set username = #{username},
+            phone    = #{phone}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="java.lang.Long">
+        delete
+        from user
+        where id = #{identity };
+    </delete>
+</mapper>
