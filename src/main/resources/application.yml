@@ -1,0 +1,15 @@
+server:
+  port: 8081
+
+spring:
+  jpa:
+    database: mysql
+  datasource:
+    url: jdbc:mysql://bbs171.lsun.net:3306/bbs171?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+    username: bbs171
+    password: lsun.net&BBS1253
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapping/*.xml
+  type-aliases-package: net.lsun.bbs171.entity

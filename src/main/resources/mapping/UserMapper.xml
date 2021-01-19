@@ -32,4 +32,11 @@
         from user
         where id = #{identity };
     </delete>
+
+    <select id="login" parameterType="java.lang.String" resultType="User">
+        select *
+        from user
+        where phone = #{phone}
+          and password = #{password}
+    </select>
 </mapper>

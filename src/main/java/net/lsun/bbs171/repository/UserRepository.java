@@ -14,4 +14,6 @@ public interface UserRepository {
     void update(User user);
 
     void deleteById(Long id);
+
+    User login(String phone, String password);
 }

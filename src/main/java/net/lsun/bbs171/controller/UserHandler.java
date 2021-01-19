@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @RestController
+@RequestMapping("/user")
 public class UserHandler {
 
     @Resource
@@ -36,6 +37,12 @@ public class UserHandler {
     @DeleteMapping("/deleteById/{id}")
     public void deleteById(@PathVariable("id") Long id) {
         userRepository.deleteById(id);
+    }
+
+    @PostMapping("/login")
+    public User login(@RequestBody String phone, @RequestBody String password) {
+        System.out.println(phone + "---");
+        return userRepository.login(phone, password);
     }
 
 }
