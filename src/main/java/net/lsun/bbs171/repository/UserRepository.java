@@ -9,11 +9,14 @@ public interface UserRepository {
 
     User findById(Long id);
 
+    // TODO
+    User findByPhone(String phone);
+
     void save(User user);
 
     void update(User user);
 
     void deleteById(Long id);
 
-    User login(String phone, String password);
+//    User login(String phone, String password);
 }

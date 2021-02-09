@@ -5,10 +5,24 @@ spring:
   jpa:
     database: mysql
   datasource:
+#    url: jdbc:mysql://localhost:3306/bbs171?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+#    username: root
+#    password: lsun.net
     url: jdbc:mysql://bbs171.lsun.net:3306/bbs171?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
     username: bbs171
     password: lsun.net&BBS1253
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 60000 # 默认30000ms
+      max-lifetime: 60000 # 默认1800000ms 最小30000ms
+      maximum-pool-size: 50 #默认 10个
+#      minimum-idle: 50
+      validation-timeout: 3000 # 默认 5000ms 最小250 要小于connection-timeout
+      idle-timeout: 60000  #默认600000ms 最小10000ms
+  security:
+    user:
+      name: lsun
+      password: 123456
 
 mybatis:
   mapper-locations: classpath:mapping/*.xml

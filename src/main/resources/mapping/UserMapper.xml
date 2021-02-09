@@ -14,6 +14,12 @@
         where id = #{id}
     </select>
 
+    <select id="findByPhone" parameterType="java.lang.String" resultType="User">
+        select *
+        from user
+        where phone = #{phone}
+    </select>
+
     <insert id="save" parameterType="User">
         INSERT INTO user(phone, username, password, gender, avatar)
         VALUES (#{phone}, #{username}, #{password}, #{gender}, #{avatar})
@@ -33,10 +39,10 @@
         where id = #{identity };
     </delete>
 
-    <select id="login" parameterType="java.lang.String" resultType="User">
-        select *
-        from user
-        where phone = #{phone}
-          and password = #{password}
-    </select>
+<!--    <select id="login" parameterType="java.lang.String" resultType="User">-->
+<!--        select *-->
+<!--        from user-->
+<!--        where phone = #{phone}-->
+<!--          and password = #{password}-->
+<!--    </select>-->
 </mapper>
