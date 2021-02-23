@@ -18,7 +18,7 @@ spring:
       maximum-pool-size: 50 #默认 10个
 #      minimum-idle: 50
       validation-timeout: 3000 # 默认 5000ms 最小250 要小于connection-timeout
-      idle-timeout: 60000  #默认600000ms 最小10000ms
+#      idle-timeout: 60000  #默认600000ms 最小10000ms
   security:
     user:
       name: lsun
