@@ -103,9 +103,32 @@ public class UserHandler {
 
             return json;
         }
-        // 生成一个6位纯数字随机验证码
-        String code = (Math.random() + "").substring(2, 8);
+        String code = AliyunUtil.generateCode();
 
+        CacheUtil.putData(user.getPhone(), code);
+
+        return AliyunUtil.sendCode(user.getPhone(), code);
+    }
+
+    /**
+     * 发送短信验证码 (已注册用户)
+     *
+     * @param user 仅需要 phone
+     * @return 结果
+     */
+    @PostMapping("/send_code_exist")
+    public JSONObject sendCodeExist(@RequestBody User user) {
+        CacheUtil.clearData();
+
+        User dbUser = userRepository.findByPhone(user.getPhone());
+        if (dbUser == null) {
+            JSONObject json = new JSONObject();
+            json.put("success", false);
+            json.put("msg", "该手机号码未注册!");
+
+            return json;
+        }
+        String code = AliyunUtil.generateCode();
         CacheUtil.putData(user.getPhone(), code);
 
         return AliyunUtil.sendCode(user.getPhone(), code);
@@ -140,6 +163,32 @@ public class UserHandler {
 
             json.put("success", true);
             json.put("msg", "注册成功!");
+        }
+
+        return json;
+    }
+
+    @PostMapping("/reset_password")
+    public JSONObject resetPassword(@RequestBody RegUser regUser) {
+        JSONObject json = new JSONObject();
+        String code = CacheUtil.getData(regUser.getPhone());
+        if (code == null) {
+            json.put("success", false);
+            json.put("msg", "验证码无效!");
+        } else if (!code.equals(regUser.getCode())) {
+            json.put("success", false);
+            json.put("msg", "验证码错误!");
+        } else {
+            User user = new User();
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+
+            user.setPhone(regUser.getPhone());
+            user.setPassword(bCryptPasswordEncoder.encode(regUser.getPassword()));
+
+            userRepository.resetPassword(user);
+
+            json.put("success", true);
+            json.put("msg", "重置成功!");
         }
 
         return json;

@@ -15,5 +15,7 @@ public interface UserRepository {
 
     void update(User user);
 
+    void resetPassword(User user);
+
     void deleteById(Long id);
 }

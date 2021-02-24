@@ -16,7 +16,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public static final String[] AUTH_WHITELIST = {
             "/users/token",
             "/users/send_code",
-            "/users/reg"
+            "/users/send_code_exist",
+            "/users/reg",
+            "/users/reset_password"
     };
 
     @Override

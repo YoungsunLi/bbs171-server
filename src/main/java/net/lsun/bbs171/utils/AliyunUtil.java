@@ -62,4 +62,13 @@ public class AliyunUtil {
         return json;
     }
 
+    /**
+     * 生成一个6位纯数字随机验证码
+     *
+     * @return code
+     */
+    public static String generateCode() {
+        return (Math.random() + "").substring(2, 8);
+    }
+
 }

@@ -21,8 +21,8 @@
     </select>
 
     <insert id="save" parameterType="User">
-        INSERT INTO user(phone, username, password, gender, avatar)
-        VALUES (#{phone}, #{username}, #{password}, #{gender}, #{avatar})
+        insert into user(phone, username, password, gender, avatar)
+        values (#{phone}, #{username}, #{password}, #{gender}, #{avatar})
     </insert>
 
     <!--    TODO-->
@@ -31,6 +31,12 @@
         set username = #{username},
             phone    = #{phone}
         where id = #{id}
+    </update>
+
+    <update id="resetPassword" parameterType="User">
+        update user
+        set password = #{password}
+        where phone = #{phone}
     </update>
 
     <delete id="deleteById" parameterType="java.lang.Long">
