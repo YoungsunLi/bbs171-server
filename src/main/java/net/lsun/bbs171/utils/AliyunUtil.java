@@ -13,6 +13,13 @@ import net.lsun.bbs171.entity.CodeResult;
 
 public class AliyunUtil {
 
+    /**
+     * 发送短信验证码
+     *
+     * @param phone 接收手机号
+     * @param code  验证码
+     * @return 结果
+     */
     public static JSONObject sendCode(String phone, String code) {
         final String accessKeyId = "LTAI4G4o1KM38JH25mL4W5dm";
         final String accessKeySecret = "dcexjXxirteZjAiuVY93NZySQiHiD7";

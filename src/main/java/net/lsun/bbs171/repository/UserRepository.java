@@ -9,7 +9,6 @@ public interface UserRepository {
 
     User findById(Long id);
 
-    // TODO
     User findByPhone(String phone);
 
     void save(User user);
@@ -17,6 +16,4 @@ public interface UserRepository {
     void update(User user);
 
     void deleteById(Long id);
-
-//    User login(String phone, String password);
 }
