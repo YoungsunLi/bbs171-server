@@ -3,6 +3,7 @@ package net.lsun.bbs171.controller;
 import com.alibaba.fastjson.JSONObject;
 import net.lsun.bbs171.entity.User;
 import net.lsun.bbs171.repository.UserRepository;
+import net.lsun.bbs171.utils.AliyunUtil;
 import net.lsun.bbs171.utils.JWTUtil;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -79,6 +80,21 @@ public class UserHandler {
         }
 
         return json;
+    }
+
+    /**
+     * 发送短信验证码
+     * @param _user 仅需要 phone
+     * @return 结果
+     */
+    @PostMapping("/send_code")
+    public JSONObject sendCode(@RequestBody User _user) {
+        String code = (Math.random() + "").substring(2, 8);
+
+        // TODO code 要存起来做校验
+        System.out.println(code);
+
+        return AliyunUtil.sendCode(_user.getPhone(), code);
     }
 
 }

@@ -14,7 +14,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     // 不需要 token 的 url
     public static final String[] AUTH_WHITELIST = {
-            "/users/token"
+            "/users/token",
+            "/users/send_code"
     };
 
     @Override

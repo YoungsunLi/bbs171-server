@@ -4,13 +4,11 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.log4j.Log4j2;
 
 import java.security.Key;
 import java.util.Date;
 import java.util.Map;
 
-@Log4j2
 public class JWTUtil {
     // 前缀
     public static final String TOKEN_PREFIX = "Bearer ";
