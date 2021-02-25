@@ -21,8 +21,8 @@ public class AliyunUtil {
      * @return 结果
      */
     public static JSONObject sendCode(String phone, String code) {
-        final String accessKeyId = "LTAI4G4o1KM38JH25mL4W5dm";
-        final String accessKeySecret = "dcexjXxirteZjAiuVY93NZySQiHiD7";
+        final String accessKeyId = "LTAI4G7RxMseuPqo76SeNoaB";
+        final String accessKeySecret = "j9DUbr81ndUARxPVJYiU6KbED2y5e2";
 
         DefaultProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
         IAcsClient client = new DefaultAcsClient(profile);

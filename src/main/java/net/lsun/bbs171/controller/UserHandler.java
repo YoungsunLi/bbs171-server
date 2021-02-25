@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserHandler {
 
     @Resource
@@ -93,8 +93,6 @@ public class UserHandler {
      */
     @PostMapping("/send_code")
     public JSONObject sendCode(@RequestBody User user) {
-        CacheUtil.clearData();
-
         User dbUser = userRepository.findByPhone(user.getPhone());
         if (dbUser != null) {
             JSONObject json = new JSONObject();
@@ -118,8 +116,6 @@ public class UserHandler {
      */
     @PostMapping("/send_code_exist")
     public JSONObject sendCodeExist(@RequestBody User user) {
-        CacheUtil.clearData();
-
         User dbUser = userRepository.findByPhone(user.getPhone());
         if (dbUser == null) {
             JSONObject json = new JSONObject();

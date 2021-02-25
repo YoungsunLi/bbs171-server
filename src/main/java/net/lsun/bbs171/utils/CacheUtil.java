@@ -24,6 +24,8 @@ public class CacheUtil {
      * @param key  储存数据的key
      */
     public static void putData(String key, String code) {
+        clearData();
+
         List<Object> list = new ArrayList<>();
         list.add(code);
         list.add(System.currentTimeMillis());
@@ -46,7 +48,8 @@ public class CacheUtil {
             cache.remove(key);
             return null;
         }
-//        cache.remove(key);
+        cache.remove(key);
+
         return code;
     }
 
