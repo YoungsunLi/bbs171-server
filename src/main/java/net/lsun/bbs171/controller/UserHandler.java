@@ -61,14 +61,15 @@ public class UserHandler {
         try {
             User dbUser = userRepository.findByPhone(user.getPhone());
             if (dbUser != null) {
-                String dbPassWord = dbUser.getPassword();
-                if (bCryptPasswordEncoder.matches(user.getPassword(), dbPassWord)) {
+                if (bCryptPasswordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
                     // 创建 token
                     String token = JWTUtil.generateToken(user.getPhone());
+                    dbUser.setPassword(null);
 
                     json.put("success", true);
                     json.put("msg", "登陆成功!");
                     json.put("token", token);
+                    json.put("user", dbUser);
                 } else {
                     json.put("success", false);
                     json.put("msg", "密码错误!");

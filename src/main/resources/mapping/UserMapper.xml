@@ -5,49 +5,49 @@
 <mapper namespace="net.lsun.bbs171.repository.UserRepository">
     <select id="findAll" resultType="User">
         select *
-        from user
+        from users
     </select>
 
     <select id="findById" parameterType="java.lang.Long" resultType="User">
         select *
-        from user
+        from users
         where id = #{id}
     </select>
 
     <select id="findByPhone" parameterType="java.lang.String" resultType="User">
         select *
-        from user
+        from users
         where phone = #{phone}
     </select>
 
     <insert id="save" parameterType="User">
-        insert into user(phone, username, password, gender, avatar)
+        insert into users(phone, username, password, gender, avatar)
         values (#{phone}, #{username}, #{password}, #{gender}, #{avatar})
     </insert>
 
     <!--    TODO-->
     <update id="update" parameterType="User">
-        update user
+        update users
         set username = #{username},
             phone    = #{phone}
         where id = #{id}
     </update>
 
     <update id="resetPassword" parameterType="User">
-        update user
+        update users
         set password = #{password}
         where phone = #{phone}
     </update>
 
     <delete id="deleteById" parameterType="java.lang.Long">
         delete
-        from user
+        from users
         where id = #{identity };
     </delete>
 
 <!--    <select id="login" parameterType="java.lang.String" resultType="User">-->
 <!--        select *-->
-<!--        from user-->
+<!--        from users-->
 <!--        where phone = #{phone}-->
 <!--          and password = #{password}-->
 <!--    </select>-->
