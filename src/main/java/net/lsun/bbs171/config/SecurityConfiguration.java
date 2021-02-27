@@ -21,7 +21,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/user/reset_password",
 
             "/post/get_posts_for_index",
-            "/post/detail"
+            "/post/detail",
+
+            "/comment/get_all"
     };
 
     @Override

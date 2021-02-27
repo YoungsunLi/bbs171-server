@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lsun.bbs171.repository.CommentRepository">
+
+    <insert id="submit" parameterType="Comment">
+        insert into comment(post_id, from_phone, content)
+        values (#{post_id}, #{from_phone}, #{content})
+    </insert>
+
+    <select id="findAllComment" resultType="CommentAndUser">
+        select comment.id,
+               comment.post_id,
+               comment.from_phone,
+               comment.content,
+               comment.datetime,
+               users.id user_id,
+               users.role,
+               users.username,
+               users.gender,
+               users.sign,
+               users.avatar
+        from comment
+                 inner join users on comment.post_id = #{id} and comment.status = 1 and users.phone = comment.from_phone
+    </select>
+
+</mapper>
