@@ -18,7 +18,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/user/send_code",
             "/user/send_code_exist",
             "/user/reg",
-            "/user/reset_password"
+            "/user/reset_password",
+
+            "/post/get_posts_for_index"
     };
 
     @Override

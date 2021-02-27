@@ -9,4 +9,25 @@
         values (#{phone}, #{title}, #{content}, #{category})
     </insert>
 
+    <select id="findPostsForIndex" resultType="PostsForIndex">
+        select posts.id,
+        posts.title,
+        posts.datetime,
+        posts.category,
+        posts.views,
+        posts.comment,
+        users.id user_id,
+        users.username,
+        users.avatar
+        from posts
+        inner join users on users.phone = posts.phone and posts.status = 1
+        <if test="category != 0">
+            and category = #{category}
+        </if>
+        <if test="keywords != ''">
+            and title REGEXP #{keywords}
+        </if>
+        order by ${sort} desc
+    </select>
+
 </mapper>

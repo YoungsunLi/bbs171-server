@@ -27,3 +27,5 @@ spring:
 mybatis:
   mapper-locations: classpath:mapping/*.xml
   type-aliases-package: net.lsun.bbs171.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
