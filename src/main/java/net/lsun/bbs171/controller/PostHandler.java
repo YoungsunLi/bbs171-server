@@ -2,6 +2,7 @@ package net.lsun.bbs171.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import net.lsun.bbs171.entity.Post;
+import net.lsun.bbs171.entity.PostDetail;
 import net.lsun.bbs171.entity.PostsForIndex;
 import net.lsun.bbs171.repository.PostRepository;
 import org.apache.ibatis.annotations.Param;
@@ -41,7 +42,7 @@ public class PostHandler {
      * @param category 分类: 0=综合, 1=默认, 2=学习, 3=生活.
      * @param sort     排序方式: 0=按最新, 1=按热度, 2=按评论.
      * @param keywords 搜索标题关键字
-     * @return posts
+     * @return 帖子列表
      */
     @GetMapping("/get_posts_for_index")
     public JSONObject getPostsForIndex(@Param("category") int category, @Param("sort") int sort, @Param("keywords") String keywords) {
@@ -61,6 +62,28 @@ public class PostHandler {
         List<PostsForIndex> posts = postRepository.findPostsForIndex(category, sortStr, keywords);
         json.put("success", true);
         json.put("data", posts);
+
+        return json;
+    }
+
+    /**
+     * 通过帖子id获取单个帖子信息和作者信息
+     *
+     * @param id 帖子id
+     * @return 帖子详情
+     */
+    @GetMapping("/detail")
+    public JSONObject getPostForDetail(@Param("id") int id) {
+        JSONObject json = new JSONObject();
+        PostDetail post = postRepository.findPostDetail(id);
+
+        if (post == null || post.getStatus() == 2) {
+            json.put("success", false);
+            json.put("msg", "该帖子不存在!");
+        } else {
+            json.put("success", true);
+            json.put("data", post);
+        }
 
         return json;
     }

@@ -30,4 +30,16 @@
         order by ${sort} desc
     </select>
 
+    <select id="findPostDetail" resultType="PostDetail">
+        select posts.*,
+               users.id user_id,
+               users.role,
+               users.username,
+               users.gender,
+               users.sign,
+               users.avatar
+        from posts
+                 inner join users on posts.id = #{id} and users.phone = posts.phone
+    </select>
+
 </mapper>
