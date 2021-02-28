@@ -75,6 +75,7 @@ public class PostHandler {
     @GetMapping("/detail")
     public JSONObject getPostForDetail(@Param("id") int id) {
         JSONObject json = new JSONObject();
+        postRepository.updateViews(id);
         PostDetail post = postRepository.findPostDetail(id);
 
         if (post == null || post.getStatus() == 2) {

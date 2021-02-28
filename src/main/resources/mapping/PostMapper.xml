@@ -42,4 +42,16 @@
                  inner join users on posts.id = #{id} and users.phone = posts.phone
     </select>
 
+    <update id="updateViews">
+        update posts
+        set views = views + 1
+        where id = #{id}
+    </update>
+
+    <update id="updateCommentCount">
+        update posts
+        set comment = comment + ${num}
+        where id = #{id}
+    </update>
+
 </mapper>

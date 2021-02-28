@@ -25,4 +25,16 @@
                  inner join users on comment.post_id = #{id} and comment.status = 1 and users.phone = comment.from_phone
     </select>
 
+    <select id="findComment" resultType="Comment">
+        select *
+        from comment
+        where id = #{id};
+    </select>
+
+    <update id="delComment">
+        update comment
+        set status = 2
+        where id = #{id}
+    </update>
+
 </mapper>

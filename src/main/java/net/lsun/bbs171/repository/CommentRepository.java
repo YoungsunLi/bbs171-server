@@ -10,4 +10,8 @@ public interface CommentRepository {
     void submit(Comment comment);
 
     List<CommentAndUser> findAllComment(@Param("id") int id);
+
+    void delComment(@Param("id") int id);
+
+    Comment findComment(@Param("id") int id);
 }
