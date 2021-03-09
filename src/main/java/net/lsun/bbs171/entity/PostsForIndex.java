@@ -13,6 +13,7 @@ public class PostsForIndex {
     private int category;
     private int views;
     private int comment;
+    private int highlight;
     private int user_id;
     private String username;
     private String avatar;

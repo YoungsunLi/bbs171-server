@@ -16,4 +16,5 @@ public class Post {
     private int status;
     private int report;
     private int comment;
+    private int highlight;
 }

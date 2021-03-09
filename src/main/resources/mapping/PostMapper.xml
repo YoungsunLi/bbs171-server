@@ -16,6 +16,7 @@
         posts.category,
         posts.views,
         posts.comment,
+        posts.highlight,
         users.id user_id,
         users.username,
         users.avatar

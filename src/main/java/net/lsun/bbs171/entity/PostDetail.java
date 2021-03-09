@@ -17,6 +17,7 @@ public class PostDetail {
     private int status;
     private int report;
     private int comment;
+    private int highlight;
     private int user_id;
     private int role;
     private String username;
