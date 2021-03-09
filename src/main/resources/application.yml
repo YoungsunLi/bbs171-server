@@ -10,7 +10,7 @@ spring:
 #    password: lsun.net
     url: jdbc:mysql://bbs171.lsun.net:3306/bbs171?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
     username: bbs171
-    password: lsun.net&BBS1253
+    password: XXtGYkSpKGfAWHM2
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       connection-timeout: 60000 # 默认30000ms
