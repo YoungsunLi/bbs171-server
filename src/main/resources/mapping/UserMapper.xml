@@ -25,12 +25,12 @@
         values (#{phone}, #{username}, #{password}, #{gender}, #{avatar})
     </insert>
 
-    <!--    TODO-->
     <update id="update" parameterType="User">
         update users
         set username = #{username},
-            phone    = #{phone}
-        where id = #{id}
+            gender   = #{gender},
+            sign     = #{sign}
+        where phone = #{phone}
     </update>
 
     <update id="resetPassword" parameterType="User">
@@ -45,10 +45,10 @@
         where id = #{identity };
     </delete>
 
-<!--    <select id="login" parameterType="java.lang.String" resultType="User">-->
-<!--        select *-->
-<!--        from users-->
-<!--        where phone = #{phone}-->
-<!--          and password = #{password}-->
-<!--    </select>-->
+    <!--    <select id="login" parameterType="java.lang.String" resultType="User">-->
+    <!--        select *-->
+    <!--        from users-->
+    <!--        where phone = #{phone}-->
+    <!--          and password = #{password}-->
+    <!--    </select>-->
 </mapper>

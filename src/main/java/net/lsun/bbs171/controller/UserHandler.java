@@ -7,6 +7,7 @@ import net.lsun.bbs171.repository.UserRepository;
 import net.lsun.bbs171.utils.AliyunUtil;
 import net.lsun.bbs171.utils.CacheUtil;
 import net.lsun.bbs171.utils.JWTUtil;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,9 +39,22 @@ public class UserHandler {
         userRepository.save(user);
     }
 
-    @PutMapping("/update")
-    public void update(@RequestBody User user) {
+    @PostMapping("/update")
+    public JSONObject update(@RequestBody User user) {
+        JSONObject json = new JSONObject();
+
+        String phone = SecurityContextHolder.getContext().getAuthentication().getName();
+        user.setPhone(phone);
+
         userRepository.update(user);
+        User dbUser = userRepository.findByPhone(phone);
+        dbUser.setPassword(null);
+
+        json.put("success", true);
+        json.put("msg", "修改成功!");
+        json.put("user", dbUser);
+
+        return json;
     }
 
     @DeleteMapping("/deleteById/{id}")
