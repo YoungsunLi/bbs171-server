@@ -1,7 +1,8 @@
 package net.lsun.bbs171.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import net.lsun.bbs171.entity.RegUser;
+import net.lsun.bbs171.entity.RegUserDTO;
+import net.lsun.bbs171.entity.UpdatePasswordDTO;
 import net.lsun.bbs171.entity.User;
 import net.lsun.bbs171.repository.UserRepository;
 import net.lsun.bbs171.utils.AliyunUtil;
@@ -16,6 +17,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/user")
 public class UserHandler {
+    private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Resource
     private UserRepository userRepository;
@@ -39,6 +41,12 @@ public class UserHandler {
         userRepository.save(user);
     }
 
+    /**
+     * 修改用户资料
+     *
+     * @param user 可修改 username gender sign
+     * @return 包括需改后的用户信息
+     */
     @PostMapping("/update")
     public JSONObject update(@RequestBody User user) {
         JSONObject json = new JSONObject();
@@ -71,7 +79,6 @@ public class UserHandler {
     @PostMapping("/token")
     public JSONObject token(@RequestBody User user) {
         JSONObject json = new JSONObject();
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         try {
             User dbUser = userRepository.findByPhone(user.getPhone());
             if (dbUser != null) {
@@ -148,27 +155,26 @@ public class UserHandler {
     /**
      * 注册
      *
-     * @param regUser 用户注册信息
+     * @param regUserDTO 用户注册信息
      * @return 结果
      */
     @PostMapping("/reg")
-    public JSONObject reg(@RequestBody RegUser regUser) {
+    public JSONObject reg(@RequestBody RegUserDTO regUserDTO) {
         JSONObject json = new JSONObject();
-        String code = CacheUtil.getData(regUser.getPhone());
+        String code = CacheUtil.getData(regUserDTO.getPhone());
         if (code == null) {
             json.put("success", false);
             json.put("msg", "验证码无效!");
-        } else if (!code.equals(regUser.getCode())) {
+        } else if (!code.equals(regUserDTO.getCode())) {
             json.put("success", false);
             json.put("msg", "验证码错误!");
         } else {
             User user = new User();
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-            user.setPhone(regUser.getPhone());
-            user.setUsername(regUser.getUsername());
-            user.setPassword(bCryptPasswordEncoder.encode(regUser.getPassword()));
-            user.setGender(regUser.getGender());
+            user.setPhone(regUserDTO.getPhone());
+            user.setUsername(regUserDTO.getUsername());
+            user.setPassword(bCryptPasswordEncoder.encode(regUserDTO.getPassword()));
+            user.setGender(regUserDTO.getGender());
 
             userRepository.save(user);
 
@@ -179,27 +185,59 @@ public class UserHandler {
         return json;
     }
 
+    /**
+     * 重置密码
+     *
+     * @param regUserDTO 需要 phone code password
+     * @return json
+     */
     @PostMapping("/reset_password")
-    public JSONObject resetPassword(@RequestBody RegUser regUser) {
+    public JSONObject resetPassword(@RequestBody RegUserDTO regUserDTO) {
         JSONObject json = new JSONObject();
-        String code = CacheUtil.getData(regUser.getPhone());
+        String code = CacheUtil.getData(regUserDTO.getPhone());
         if (code == null) {
             json.put("success", false);
             json.put("msg", "验证码无效!");
-        } else if (!code.equals(regUser.getCode())) {
+        } else if (!code.equals(regUserDTO.getCode())) {
             json.put("success", false);
             json.put("msg", "验证码错误!");
         } else {
             User user = new User();
-            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-            user.setPhone(regUser.getPhone());
-            user.setPassword(bCryptPasswordEncoder.encode(regUser.getPassword()));
+            user.setPhone(regUserDTO.getPhone());
+            user.setPassword(bCryptPasswordEncoder.encode(regUserDTO.getPassword()));
 
             userRepository.resetPassword(user);
 
             json.put("success", true);
             json.put("msg", "重置成功!");
+        }
+
+        return json;
+    }
+
+    /**
+     * 修改密码
+     *
+     * @param updatePasswordDTO 当前密码 跟新密码
+     * @return json
+     */
+    @PostMapping("/update_password")
+    public JSONObject updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
+        System.out.println(updatePasswordDTO.getOldPassword());
+        System.out.println(updatePasswordDTO.getNewPassword());
+        JSONObject json = new JSONObject();
+        String phone = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User dbUser = userRepository.findByPhone(phone);
+
+        if (bCryptPasswordEncoder.matches(updatePasswordDTO.getOldPassword(), dbUser.getPassword())) {
+            userRepository.updatePassword(phone, bCryptPasswordEncoder.encode(updatePasswordDTO.getNewPassword()));
+            json.put("success", true);
+            json.put("msg", "修改成功!");
+        } else {
+            json.put("success", false);
+            json.put("msg", "当前密码错误!");
         }
 
         return json;

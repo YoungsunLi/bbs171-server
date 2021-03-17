@@ -39,6 +39,12 @@
         where phone = #{phone}
     </update>
 
+    <update id="updatePassword">
+        update users
+        set password = #{password}
+        where phone = #{phone}
+    </update>
+
     <delete id="deleteById" parameterType="java.lang.Long">
         delete
         from users

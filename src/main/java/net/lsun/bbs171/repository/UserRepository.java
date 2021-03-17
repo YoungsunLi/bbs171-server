@@ -18,4 +18,6 @@ public interface UserRepository {
     void resetPassword(User user);
 
     void deleteById(Long id);
+
+    void updatePassword(String phone, String password);
 }
