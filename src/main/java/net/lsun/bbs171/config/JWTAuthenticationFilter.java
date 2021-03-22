@@ -32,18 +32,29 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
         String url = request.getRequestURI();
-        String header = request.getHeader(JWTUtil.AUTHORIZATION);
 
-        JSONObject json = new JSONObject();
         // 跳过不需要验证的路径
         if (Arrays.asList(SecurityConfiguration.AUTH_WHITELIST).contains(url)) {
             chain.doFilter(request, response);
             return;
         }
 
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("text/html;charset=UTF-8");
+        // 跳过验不验证都行的路径
+        if (Arrays.asList(SecurityConfiguration.AUTH_ANYWAY).contains(url)) {
+            try {
+                UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            } catch (Exception ignored) {
+            }
+            chain.doFilter(request, response);
+            return;
+        }
+
+        JSONObject json = new JSONObject();
+        String header = request.getHeader(JWTUtil.AUTHORIZATION);
 
         if (StringUtils.isBlank(header) || !header.startsWith(JWTUtil.TOKEN_PREFIX)) {
             json.put("success", false);

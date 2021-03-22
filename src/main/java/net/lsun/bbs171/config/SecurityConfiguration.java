@@ -12,7 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    // 不需要 token 的 url
+    // 不需要验证的路径
     public static final String[] AUTH_WHITELIST = {
             "/user/token",
             "/user/send_code",
@@ -21,9 +21,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/user/reset_password",
 
             "/post/get_posts_for_index",
-            "/post/detail",
 
             "/comment/get_all"
+    };
+
+    // 验不验证都行的路径
+    public static final String[] AUTH_ANYWAY = {
+            "/post/detail"
     };
 
     @Override
@@ -34,8 +38,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // 基于token，所以不需要session
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                // 可以匿名访问的链接
                 .antMatchers(AUTH_WHITELIST).permitAll()
+                .antMatchers(AUTH_ANYWAY).permitAll()
                 // 其他所有请求需要身份认证
                 .anyRequest().authenticated().and()
                 .addFilter(new JWTAuthenticationFilter(authenticationManager()));
