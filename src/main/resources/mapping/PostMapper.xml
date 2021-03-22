@@ -31,6 +31,31 @@
         order by ${sort} desc
     </select>
 
+    <select id="findPostsForManage" resultType="PostsForManage">
+        select posts.id,
+        posts.title,
+        posts.datetime,
+        posts.category,
+        posts.views,
+        posts.status,
+        posts.report,
+        posts.comment,
+        users.id user_id,
+        users.username
+        from posts
+        inner join users on users.phone = posts.phone
+        <if test="category != 0">
+            and category = #{category}
+        </if>
+        <if test="status != 3">
+            and status = #{status}
+        </if>
+        <if test="keywords != ''">
+            and title REGEXP #{keywords}
+        </if>
+        order by ${sort} desc
+    </select>
+
     <select id="findPostDetail" resultType="PostDetail">
         select posts.*,
                users.id user_id,
@@ -52,6 +77,12 @@
     <update id="updateCommentCount">
         update posts
         set comment = comment + ${num}
+        where id = #{id}
+    </update>
+
+    <update id="updateStatus">
+        update posts
+        set status = ${status}
         where id = #{id}
     </update>
 

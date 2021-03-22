@@ -17,10 +17,10 @@ public class Util {
             newDatetime = minutes + "分钟前";
         } else if (minutes < 1440) {
             newDatetime = minutes / 60 + "小时前";
-        } else if (minutes < 43200) {
+        } else if (minutes < 4320) { // 3天
             newDatetime = minutes / (60 * 24) + "天前";
         } else {
-            newDatetime = datetime.toString().substring(0, datetime.toString().indexOf("."));
+            newDatetime = parseTimestampToString(datetime);
         }
         return newDatetime;
     }
@@ -36,10 +36,10 @@ public class Util {
     }
 
     /**
-     * 板块标识符转转中文名
+     * 板块标识符转中文名
      *
      * @param category 板块标识符
-     * @return 板块中文名
+     * @return 板块中文名 TODO 后面要数据库
      */
     public static String parseCategory(int category) {
         switch (category) {
@@ -51,5 +51,27 @@ public class Util {
             default:
                 return "默认";
         }
+    }
+
+    /**
+     * 排序类型转列名
+     *
+     * @param sort 排序类型
+     * @return 列名
+     */
+    public static String parseSort(int sort) {
+        String sortStr;
+        switch (sort) {
+            case 1:
+                sortStr = "views";
+                break;
+            case 2:
+                sortStr = "comment";
+                break;
+            default:
+                sortStr = "datetime";
+        }
+
+        return sortStr;
     }
 }
