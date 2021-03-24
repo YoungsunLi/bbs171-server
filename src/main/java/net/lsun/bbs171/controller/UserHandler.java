@@ -8,6 +8,7 @@ import net.lsun.bbs171.repository.UserRepository;
 import net.lsun.bbs171.utils.AliyunUtil;
 import net.lsun.bbs171.utils.CacheUtil;
 import net.lsun.bbs171.utils.JWTUtil;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +32,28 @@ public class UserHandler {
         return json;
     }
 
-    @GetMapping("/findById/{id}")
-    public User findById(@PathVariable("id") Long id) {
-        return userRepository.findById(id);
+    /**
+     * 获取用户信息
+     * @param id 用户ID
+     * @return user
+     */
+    @GetMapping("/get_user")
+    public JSONObject getUser(@Param("id") Long id) {
+        JSONObject json = new JSONObject();
+        User user = userRepository.findById(id);
+
+        if (user == null) {
+            json.put("success", false);
+            json.put("msg", "用户不存在!");
+
+        } else {
+            user.setPassword(null);
+
+            json.put("success", true);
+            json.put("user", user);
+        }
+
+        return json;
     }
 
     @PostMapping("/save")
