@@ -6,7 +6,7 @@ import net.lsun.bbs171.utils.Util;
 import java.sql.Timestamp;
 
 @Data
-public class PostsForManage {
+public class PostForManage {
     private int id;
     private String title;
     private Timestamp datetime;

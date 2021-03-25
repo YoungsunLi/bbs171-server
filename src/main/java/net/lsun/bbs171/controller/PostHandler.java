@@ -50,7 +50,7 @@ public class PostHandler {
         postRepository.updateViews(id);
 
         JSONObject json = new JSONObject();
-        PostDetail post = postRepository.findPostDetail(id);
+        PostDetail post = postRepository.findPostsDetail(id);
 
         if (post != null) { //如果帖子存在
             if (post.getStatus() == 1) { //如果帖子已审核
@@ -85,11 +85,11 @@ public class PostHandler {
      * @return 帖子列表
      */
     @GetMapping("/get_posts_for_index")
-    public JSONObject getPostsForIndex(@Param("category") int category, @Param("sort") int sort, @Param("keywords") String keywords) {
+    public JSONObject getPostForIndex(@Param("category") int category, @Param("sort") int sort, @Param("keywords") String keywords) {
         JSONObject json = new JSONObject();
         String sortStr = Util.parseSort(sort);
 
-        List<PostsForIndex> posts = postRepository.findPostsForIndex(category, sortStr, keywords);
+        List<PostForIndex> posts = postRepository.findPostsForIndex(category, sortStr, keywords);
         json.put("success", true);
         json.put("data", posts);
 
@@ -106,7 +106,7 @@ public class PostHandler {
      * @return 帖子列表
      */
     @GetMapping("/get_posts_for_manage")
-    public JSONObject getPostsForManage(@Param("category") int category, @Param("sort") int sort, @Param("status") int status, @Param("keywords") String keywords) {
+    public JSONObject getPostForManage(@Param("category") int category, @Param("sort") int sort, @Param("status") int status, @Param("keywords") String keywords) {
         JSONObject json = new JSONObject();
         String sortStr = Util.parseSort(sort);
         String authPhone = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -117,7 +117,7 @@ public class PostHandler {
             json.put("success", false);
             json.put("msg", "非法操作!");
         } else {
-            List<PostsForManage> posts = postRepository.findPostsForManage(category, sortStr, status, keywords);
+            List<PostForManage> posts = postRepository.findPostsForManage(category, sortStr, status, keywords);
             json.put("success", true);
             json.put("data", posts);
         }
@@ -139,7 +139,7 @@ public class PostHandler {
         int role = userRepository.findByPhone(authPhone).getRole();
 
         if (role != 0) {
-            String postPhone = postRepository.findPostDetail(id).getPhone();
+            String postPhone = postRepository.findPostsDetail(id).getPhone();
             if (!authPhone.equals(postPhone)) {
                 json.put("success", false);
                 json.put("msg", "非法操作!");

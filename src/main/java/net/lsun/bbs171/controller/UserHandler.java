@@ -1,9 +1,11 @@
 package net.lsun.bbs171.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import net.lsun.bbs171.entity.PostForUserHome;
 import net.lsun.bbs171.entity.RegUserDTO;
 import net.lsun.bbs171.entity.UpdatePasswordDTO;
 import net.lsun.bbs171.entity.User;
+import net.lsun.bbs171.repository.PostRepository;
 import net.lsun.bbs171.repository.UserRepository;
 import net.lsun.bbs171.utils.AliyunUtil;
 import net.lsun.bbs171.utils.CacheUtil;
@@ -14,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -22,6 +25,9 @@ public class UserHandler {
 
     @Resource
     private UserRepository userRepository;
+
+    @Resource
+    private PostRepository postRepository;
 
     @GetMapping("/findAll")
     public JSONObject findALl() {
@@ -48,9 +54,12 @@ public class UserHandler {
 
         } else {
             user.setPassword(null);
+            List<PostForUserHome> posts = postRepository.findPostsForUserHome(user.getPhone());
+            user.setPhone(null);
 
             json.put("success", true);
             json.put("user", user);
+            json.put("posts", posts);
         }
 
         return json;

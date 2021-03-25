@@ -9,7 +9,7 @@
         values (#{phone}, #{title}, #{content}, #{category})
     </insert>
 
-    <select id="findPostsForIndex" resultType="PostsForIndex">
+    <select id="findPostsForIndex" resultType="PostForIndex">
         select posts.id,
         posts.title,
         posts.datetime,
@@ -31,7 +31,7 @@
         order by ${sort} desc
     </select>
 
-    <select id="findPostsForManage" resultType="PostsForManage">
+    <select id="findPostsForManage" resultType="PostForManage">
         select posts.id,
         posts.title,
         posts.datetime,
@@ -56,7 +56,24 @@
         order by ${sort} desc
     </select>
 
-    <select id="findPostDetail" resultType="PostDetail">
+    <select id="findPostsForUserHome" resultType="PostForUserHome">
+        select id,
+               title,
+               datetime,
+               category,
+               views,
+               status,
+               comment,
+               highlight
+        from posts
+        where phone = #{phone}
+          and status = 1
+        order by datetime desc
+        limit 10;
+
+    </select>
+
+    <select id="findPostsDetail" resultType="PostDetail">
         select posts.*,
                users.id user_id,
                users.role,
