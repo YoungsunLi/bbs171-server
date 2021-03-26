@@ -1,10 +1,7 @@
 package net.lsun.bbs171.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import net.lsun.bbs171.entity.PostForUserHome;
-import net.lsun.bbs171.entity.RegUserDTO;
-import net.lsun.bbs171.entity.UpdatePasswordDTO;
-import net.lsun.bbs171.entity.User;
+import net.lsun.bbs171.entity.*;
 import net.lsun.bbs171.repository.PostRepository;
 import net.lsun.bbs171.repository.UserRepository;
 import net.lsun.bbs171.utils.AliyunUtil;
@@ -40,6 +37,7 @@ public class UserHandler {
 
     /**
      * 获取用户信息
+     *
      * @param id 用户ID
      * @return user
      */
@@ -272,4 +270,31 @@ public class UserHandler {
         return json;
     }
 
+    /**
+     * 收藏帖子
+     */
+    @PostMapping("/star_post")
+    public JSONObject starPost(@RequestBody StarDTO starDTO) {
+        JSONObject json = new JSONObject();
+
+        userRepository.starPost(starDTO);
+        json.put("success", true);
+        json.put("msg", "收藏成功!");
+
+        return json;
+    }
+
+    /**
+     * 取消收藏帖子
+     */
+    @GetMapping("/unstar_post")
+    public JSONObject unstarPost(@Param("id") Long id) {
+        JSONObject json = new JSONObject();
+
+        userRepository.unstarPost(id);
+        json.put("success", true);
+        json.put("msg", "取消成功!");
+
+        return json;
+    }
 }
