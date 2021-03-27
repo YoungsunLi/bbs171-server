@@ -22,13 +22,13 @@ public class JWTUtil {
     /**
      * 创建 token
      *
-     * @param phone phone
+     * @param id userID
      * @return token
      */
-    public static String generateToken(String phone) {
+    public static String generateToken(int id) {
         Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(SECRET));
         String token = Jwts.builder()
-                .claim("phone", phone)
+                .claim("user", id)
                 .setIssuer("bbs171.lsun.net")
                 //签发时间
                 .setIssuedAt(new Date())
@@ -53,6 +53,6 @@ public class JWTUtil {
                 .parseClaimsJws(token.replace(TOKEN_PREFIX, ""))
                 .getBody();
 
-        return body.get("phone").toString();
+        return body.get("user").toString();
     }
 }

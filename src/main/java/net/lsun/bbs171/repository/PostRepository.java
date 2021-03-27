@@ -12,7 +12,7 @@ public interface PostRepository {
 
     List<PostForManage> findPostsForManage(@Param("category") int category, @Param("sort") String sort, @Param("status") int status, @Param("keywords") String keywords);
 
-    List<PostForUserHome> findPostsForUserHome(@Param("phone") String phone);
+    List<PostForUserHome> findPostsForUserHome(@Param("user_id") int user_id);
 
     PostDetail findPostsDetail(@Param("id") int id);
 

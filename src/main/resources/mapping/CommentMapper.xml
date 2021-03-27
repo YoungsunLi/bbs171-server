@@ -5,14 +5,14 @@
 <mapper namespace="net.lsun.bbs171.repository.CommentRepository">
 
     <insert id="submit" parameterType="Comment">
-        insert into comment(post_id, from_phone, content)
-        values (#{post_id}, #{from_phone}, #{content})
+        insert into comment(post_id, from_id, content)
+        values (#{post_id}, #{from_id}, #{content})
     </insert>
 
     <select id="findAllComment" resultType="CommentAndUser">
         select comment.id,
                comment.post_id,
-               comment.from_phone,
+               comment.from_id,
                comment.content,
                comment.datetime,
                users.id user_id,
@@ -22,7 +22,7 @@
                users.sign,
                users.avatar
         from comment
-                 inner join users on comment.post_id = #{id} and comment.status = 1 and users.phone = comment.from_phone
+                 inner join users on comment.post_id = #{id} and comment.status = 1 and users.id = comment.from_id
     </select>
 
     <select id="findComment" resultType="Comment">

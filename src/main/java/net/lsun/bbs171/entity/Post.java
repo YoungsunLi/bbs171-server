@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 @Data
 public class Post {
     private int id;
-    private String phone;
+    private int user_id;
     private String title;
     private String content;
     private Timestamp datetime;

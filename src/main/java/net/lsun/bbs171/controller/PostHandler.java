@@ -31,8 +31,11 @@ public class PostHandler {
     @PostMapping("/submit")
     public JSONObject submit(@RequestBody Post post) {
         JSONObject json = new JSONObject();
-        post.setPhone(SecurityContextHolder.getContext().getAuthentication().getName());
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        post.setUser_id(authId);
+
         postRepository.submit(post);
+
         json.put("success", true);
         json.put("msg", "发布成功!");
 
@@ -58,9 +61,9 @@ public class PostHandler {
                 json.put("data", post);
                 return json;
             } else { // 否则验证是否是管理员
-                String authPhone = SecurityContextHolder.getContext().getAuthentication().getName();
-                if (!authPhone.equals("anonymousUser")) {
-                    int role = userRepository.findByPhone(authPhone).getRole();
+                String authId = SecurityContextHolder.getContext().getAuthentication().getName();
+                if (!authId.equals("anonymousUser")) {
+                    int role = userRepository.findById(Integer.parseInt(authId)).getRole();
                     if (role == 0) {
                         json.put("success", true);
                         json.put("data", post);
@@ -109,8 +112,8 @@ public class PostHandler {
     public JSONObject getPostForManage(@Param("category") int category, @Param("sort") int sort, @Param("status") int status, @Param("keywords") String keywords) {
         JSONObject json = new JSONObject();
         String sortStr = Util.parseSort(sort);
-        String authPhone = SecurityContextHolder.getContext().getAuthentication().getName();
-        User dbUser = userRepository.findByPhone(authPhone);
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        User dbUser = userRepository.findById(authId);
 
         if (dbUser.getRole() != 0) {
             // 非管理员
@@ -134,13 +137,13 @@ public class PostHandler {
     @GetMapping("/update_status")
     public JSONObject updateStatus(@Param("id") int id, @Param("status") int status) {
         JSONObject json = new JSONObject();
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        String authPhone = SecurityContextHolder.getContext().getAuthentication().getName();
-        int role = userRepository.findByPhone(authPhone).getRole();
+        int role = userRepository.findById(authId).getRole();
 
         if (role != 0) {
-            String postPhone = postRepository.findPostsDetail(id).getPhone();
-            if (!authPhone.equals(postPhone)) {
+            int postUserId = postRepository.findPostsDetail(id).getUser_id();
+            if (authId != postUserId) {
                 json.put("success", false);
                 json.put("msg", "非法操作!");
                 return json;

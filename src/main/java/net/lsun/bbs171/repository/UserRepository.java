@@ -8,7 +8,7 @@ import java.util.List;
 public interface UserRepository {
     List<User> findAll();
 
-    User findById(Long id);
+    User findById(int id);
 
     User findByPhone(String phone);
 
@@ -18,11 +18,11 @@ public interface UserRepository {
 
     void resetPassword(User user);
 
-    void deleteById(Long id);
+    void deleteById(int id);
 
-    void updatePassword(String phone, String password);
+    void updatePassword(int id, String password);
 
     void starPost(StarDTO starDTO);
 
-    void unstarPost(Long id);
+    void unstarPost(int id);
 }

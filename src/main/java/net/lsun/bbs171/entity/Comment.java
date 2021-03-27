@@ -9,8 +9,8 @@ import java.sql.Timestamp;
 public class Comment {
     private int id;
     private int post_id;
-    private String from_phone;
-    private String to_phone;
+    private int from_id;
+    private int to_id;
     private String content;
     private Timestamp datetime;
     private int status;

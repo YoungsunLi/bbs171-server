@@ -42,7 +42,7 @@ public class UserHandler {
      * @return user
      */
     @GetMapping("/get_user")
-    public JSONObject getUser(@Param("id") Long id) {
+    public JSONObject getUser(@Param("id") int id) {
         JSONObject json = new JSONObject();
         User user = userRepository.findById(id);
 
@@ -52,7 +52,7 @@ public class UserHandler {
 
         } else {
             user.setPassword(null);
-            List<PostForUserHome> posts = postRepository.findPostsForUserHome(user.getPhone());
+            List<PostForUserHome> posts = postRepository.findPostsForUserHome(id);
             user.setPhone(null);
 
             json.put("success", true);
@@ -77,12 +77,12 @@ public class UserHandler {
     @PostMapping("/update")
     public JSONObject update(@RequestBody User user) {
         JSONObject json = new JSONObject();
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        String phone = SecurityContextHolder.getContext().getAuthentication().getName();
-        user.setPhone(phone);
+        user.setId(authId);
 
         userRepository.update(user);
-        User dbUser = userRepository.findByPhone(phone);
+        User dbUser = userRepository.findById(authId);
         dbUser.setPassword(null);
 
         json.put("success", true);
@@ -93,7 +93,7 @@ public class UserHandler {
     }
 
     @DeleteMapping("/deleteById/{id}")
-    public void deleteById(@PathVariable("id") Long id) {
+    public void deleteById(@PathVariable("id") int id) {
         userRepository.deleteById(id);
     }
 
@@ -111,7 +111,7 @@ public class UserHandler {
             if (dbUser != null) {
                 if (bCryptPasswordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
                     // 创建 token
-                    String token = JWTUtil.generateToken(user.getPhone());
+                    String token = JWTUtil.generateToken(dbUser.getId());
                     dbUser.setPassword(null);
 
                     json.put("success", true);
@@ -151,7 +151,6 @@ public class UserHandler {
             return json;
         }
         String code = AliyunUtil.generateCode();
-
         CacheUtil.putData(user.getPhone(), code);
 
         return AliyunUtil.sendCode(user.getPhone(), code);
@@ -251,15 +250,12 @@ public class UserHandler {
      */
     @PostMapping("/update_password")
     public JSONObject updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
-        System.out.println(updatePasswordDTO.getOldPassword());
-        System.out.println(updatePasswordDTO.getNewPassword());
         JSONObject json = new JSONObject();
-        String phone = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        User dbUser = userRepository.findByPhone(phone);
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        User dbUser = userRepository.findById(authId);
 
         if (bCryptPasswordEncoder.matches(updatePasswordDTO.getOldPassword(), dbUser.getPassword())) {
-            userRepository.updatePassword(phone, bCryptPasswordEncoder.encode(updatePasswordDTO.getNewPassword()));
+            userRepository.updatePassword(authId, bCryptPasswordEncoder.encode(updatePasswordDTO.getNewPassword()));
             json.put("success", true);
             json.put("msg", "修改成功!");
         } else {
@@ -288,7 +284,7 @@ public class UserHandler {
      * 取消收藏帖子
      */
     @GetMapping("/unstar_post")
-    public JSONObject unstarPost(@Param("id") Long id) {
+    public JSONObject unstarPost(@Param("id") int id) {
         JSONObject json = new JSONObject();
 
         userRepository.unstarPost(id);

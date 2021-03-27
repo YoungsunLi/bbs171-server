@@ -31,7 +31,9 @@ public class CommentHandler {
     @PostMapping("/submit")
     public JSONObject submit(@RequestBody Comment comment) {
         JSONObject json = new JSONObject();
-        comment.setFrom_phone(SecurityContextHolder.getContext().getAuthentication().getName());
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        comment.setFrom_id(authId);
+
         commentRepository.submit(comment);
         postRepository.updateCommentCount(comment.getPost_id(), 1);
 
@@ -51,8 +53,9 @@ public class CommentHandler {
     public JSONObject delComment(@Param("id") int id) {
         JSONObject json = new JSONObject();
         Comment comment = commentRepository.findComment(id);
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        if (comment.getFrom_phone().equals(SecurityContextHolder.getContext().getAuthentication().getName())) {
+        if (comment.getFrom_id() == authId) {
             commentRepository.delComment(id);
             postRepository.updateCommentCount(comment.getPost_id(), -1);
             json.put("success", true);

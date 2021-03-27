@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class CacheUtil {
     // 设置过期时间 5 分钟
-    private static final Long TIMEOUT = 60000 * 5L;
+    private static final int TIMEOUT = 60000 * 5;
     // 设置list中的索引  0 表示数据索引
     private static final Integer DATA_INDEX = 0;
     // 设置list中的索引  1 表示保存的时间戳索引

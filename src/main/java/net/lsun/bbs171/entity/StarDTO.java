@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class StarDTO {
-    private Long user_id;
-    private Long post_id;
+    private int user_id;
+    private int post_id;
 }

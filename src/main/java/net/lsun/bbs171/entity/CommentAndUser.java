@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 public class CommentAndUser {
     private int id;
     private int post_id;
-    private String from_phone;
+    private int from_id;
     private String content;
     private Timestamp datetime;
     private int user_id;

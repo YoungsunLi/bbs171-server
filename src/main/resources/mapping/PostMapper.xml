@@ -5,8 +5,8 @@
 <mapper namespace="net.lsun.bbs171.repository.PostRepository">
 
     <insert id="submit" parameterType="Post">
-        insert into posts(phone, title, content, category)
-        values (#{phone}, #{title}, #{content}, #{category})
+        insert into posts(user_id, title, content, category)
+        values (#{user_id}, #{title}, #{content}, #{category})
     </insert>
 
     <select id="findPostsForIndex" resultType="PostForIndex">
@@ -17,11 +17,11 @@
         posts.views,
         posts.comment,
         posts.highlight,
-        users.id user_id,
+        posts.user_id,
         users.username,
         users.avatar
         from posts
-        inner join users on users.phone = posts.phone and posts.status = 1
+        inner join users on users.id = posts.user_id and posts.status = 1
         <if test="category != 0">
             and category = #{category}
         </if>
@@ -40,10 +40,10 @@
         posts.status,
         posts.report,
         posts.comment,
-        users.id user_id,
+        posts.user_id,
         users.username
         from posts
-        inner join users on users.phone = posts.phone
+        inner join users on users.id = posts.user_id
         <if test="category != 0">
             and category = #{category}
         </if>
@@ -66,7 +66,7 @@
                comment,
                highlight
         from posts
-        where phone = #{phone}
+        where user_id = #{user_id}
           and status = 1
         order by datetime desc
         limit 10;
@@ -75,14 +75,13 @@
 
     <select id="findPostsDetail" resultType="PostDetail">
         select posts.*,
-               users.id user_id,
                users.role,
                users.username,
                users.gender,
                users.sign,
                users.avatar
         from posts
-                 inner join users on posts.id = #{id} and users.phone = posts.phone
+                 inner join users on posts.id = #{id} and users.id = posts.user_id
     </select>
 
     <update id="updateViews">

@@ -103,12 +103,10 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(JWTUtil.AUTHORIZATION);
         if (token != null) {
-            String phone;
-
             // 校验 token
-            phone = JWTUtil.validateToken(token);
-            if (StringUtils.isNotBlank(phone)) {
-                return new UsernamePasswordAuthenticationToken(phone, null, new ArrayList<>());
+            String id = JWTUtil.validateToken(token);
+            if (StringUtils.isNotBlank(id)) {
+                return new UsernamePasswordAuthenticationToken(id, null, new ArrayList<>());
             }
 
             return null;

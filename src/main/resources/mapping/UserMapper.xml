@@ -8,7 +8,7 @@
         from users
     </select>
 
-    <select id="findById" parameterType="java.lang.Long" resultType="User">
+    <select id="findById" parameterType="int" resultType="User">
         select *
         from users
         where id = #{id}
@@ -30,7 +30,7 @@
         set username = #{username},
             gender   = #{gender},
             sign     = #{sign}
-        where phone = #{phone}
+        where id = #{id}
     </update>
 
     <update id="resetPassword" parameterType="User">
@@ -42,10 +42,10 @@
     <update id="updatePassword">
         update users
         set password = #{password}
-        where phone = #{phone}
+        where id = #{id}
     </update>
 
-    <delete id="deleteById" parameterType="java.lang.Long">
+    <delete id="deleteById" parameterType="int">
         delete
         from users
         where id = #{id};
@@ -56,7 +56,7 @@
         values (#{user_id}, #{post_id})
     </insert>
 
-    <delete id="unstarPost" parameterType="java.lang.Long">
+    <delete id="unstarPost" parameterType="int">
         delete
         from stars
         where id = #{id}
