@@ -102,4 +102,10 @@
         where id = #{id}
     </update>
 
+    <update id="updateHighlight">
+        update posts
+        set highlight = ${highlight}
+        where id = #{id}
+    </update>
+
 </mapper>

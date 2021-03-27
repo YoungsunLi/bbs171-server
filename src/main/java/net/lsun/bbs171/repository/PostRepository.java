@@ -21,4 +21,6 @@ public interface PostRepository {
     void updateCommentCount(@Param("id") int id, @Param("num") int num);
 
     void updateStatus(@Param("id") int id, @Param("status") int status);
+
+    void updateHighlight(@Param("id") int id, @Param("highlight") int highlight);
 }

@@ -159,4 +159,23 @@ public class PostHandler {
 
         return json;
     }
+
+    @GetMapping("/update_highlight")
+    public JSONObject updateHighlight(@Param("id") int id, @Param("highlight") int highlight) {
+        JSONObject json = new JSONObject();
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        int role = userRepository.findById(authId).getRole();
+
+        if (role == 0) {
+            postRepository.updateHighlight(id, highlight);
+
+            json.put("success", true);
+            json.put("msg", "设置成功!");
+        } else {
+            json.put("success", false);
+            json.put("msg", "非法操作!");
+        }
+
+        return json;
+    }
 }
