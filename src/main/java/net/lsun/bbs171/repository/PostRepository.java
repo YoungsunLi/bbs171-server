@@ -14,7 +14,7 @@ public interface PostRepository {
 
     List<PostForUserHome> findPostsForUserHome(@Param("user_id") int user_id);
 
-    PostDetail findPostsDetail(@Param("id") int id);
+    PostDetail findPostsDetail(@Param("id") int id, @Param("user_id") int user_id);
 
     void updateViews(@Param("id") int id);
 

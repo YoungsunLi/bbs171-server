@@ -26,7 +26,7 @@ public class CommentHandler {
      * 回复帖子
      *
      * @param comment 回复
-     * @return 结果
+     * @return msg
      */
     @PostMapping("/submit")
     public JSONObject submit(@RequestBody Comment comment) {
@@ -48,6 +48,7 @@ public class CommentHandler {
      * 根据评论id删除该评论
      *
      * @param id 该评论id
+     * @return msg
      */
     @GetMapping("del_comment")
     public JSONObject delComment(@Param("id") int id) {

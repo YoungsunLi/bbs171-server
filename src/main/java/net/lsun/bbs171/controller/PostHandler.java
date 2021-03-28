@@ -26,7 +26,7 @@ public class PostHandler {
      * 发布帖子
      *
      * @param post 帖子
-     * @return 结果
+     * @return msg
      */
     @PostMapping("/submit")
     public JSONObject submit(@RequestBody Post post) {
@@ -53,7 +53,10 @@ public class PostHandler {
         postRepository.updateViews(id);
 
         JSONObject json = new JSONObject();
-        PostDetail post = postRepository.findPostsDetail(id);
+        String authIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
+        int authId = authIdStr.equals("anonymousUser") ? 0 : Integer.parseInt(authIdStr);
+
+        PostDetail post = postRepository.findPostsDetail(id, authId);
 
         if (post != null) { //如果帖子存在
             if (post.getStatus() == 1) { //如果帖子已审核
@@ -61,9 +64,8 @@ public class PostHandler {
                 json.put("data", post);
                 return json;
             } else { // 否则验证是否是管理员
-                String authId = SecurityContextHolder.getContext().getAuthentication().getName();
-                if (!authId.equals("anonymousUser")) {
-                    int role = userRepository.findById(Integer.parseInt(authId)).getRole();
+                if (authId != 0) {
+                    int role = userRepository.findById(authId).getRole();
                     if (role == 0) {
                         json.put("success", true);
                         json.put("data", post);
@@ -133,6 +135,7 @@ public class PostHandler {
      *
      * @param id     帖子id
      * @param status 帖子状态
+     * @return msg
      */
     @GetMapping("/update_status")
     public JSONObject updateStatus(@Param("id") int id, @Param("status") int status) {
@@ -142,7 +145,7 @@ public class PostHandler {
         int role = userRepository.findById(authId).getRole();
 
         if (role != 0) {
-            int postUserId = postRepository.findPostsDetail(id).getUser_id();
+            int postUserId = postRepository.findPostsDetail(id, authId).getUser_id();
             if (authId != postUserId) {
                 json.put("success", false);
                 json.put("msg", "非法操作!");
@@ -160,6 +163,13 @@ public class PostHandler {
         return json;
     }
 
+    /**
+     * 设置精华帖
+     *
+     * @param id        帖子id
+     * @param highlight 0=非精华 1=精华
+     * @return msg
+     */
     @GetMapping("/update_highlight")
     public JSONObject updateHighlight(@Param("id") int id, @Param("highlight") int highlight) {
         JSONObject json = new JSONObject();

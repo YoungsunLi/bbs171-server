@@ -51,15 +51,27 @@
         where id = #{id};
     </delete>
 
-    <insert id="starPost" parameterType="StarDTO">
+    <insert id="starPost" parameterType="Star">
         insert into stars(user_id, post_id)
         values (#{user_id}, #{post_id})
+        on duplicate key update user_id = #{user_id}
+            and post_id = #{post_id}
     </insert>
 
-    <delete id="unstarPost" parameterType="int">
+    <delete id="unstarPost" parameterType="Star">
         delete
         from stars
-        where id = #{id}
+        where user_id = #{user_id}
+          and post_id = #{post_id}
     </delete>
+
+    <select id="getStars" parameterType="int" resultType="StarDTO">
+        select posts.id,
+               posts.title,
+               stars.datetime
+        from stars
+                 inner join posts on posts.id = stars.post_id
+        where stars.user_id = #{id}
+    </select>
 
 </mapper>

@@ -39,7 +39,7 @@ public class UserHandler {
      * 获取用户信息
      *
      * @param id 用户ID
-     * @return user
+     * @return user & posts
      */
     @GetMapping("/get_user")
     public JSONObject getUser(@Param("id") int id) {
@@ -72,7 +72,7 @@ public class UserHandler {
      * 修改用户资料
      *
      * @param user 可修改 username gender sign
-     * @return 包括需改后的用户信息
+     * @return user
      */
     @PostMapping("/update")
     public JSONObject update(@RequestBody User user) {
@@ -101,7 +101,7 @@ public class UserHandler {
      * 获取 token
      *
      * @param user 需要 phone password
-     * @return 结果
+     * @return token
      */
     @PostMapping("/token")
     public JSONObject token(@RequestBody User user) {
@@ -138,7 +138,7 @@ public class UserHandler {
      * 发送短信验证码
      *
      * @param user 仅需要 phone
-     * @return 结果
+     * @return msg
      */
     @PostMapping("/send_code")
     public JSONObject sendCode(@RequestBody User user) {
@@ -160,7 +160,7 @@ public class UserHandler {
      * 发送短信验证码 (已注册用户)
      *
      * @param user 仅需要 phone
-     * @return 结果
+     * @return msg
      */
     @PostMapping("/send_code_exist")
     public JSONObject sendCodeExist(@RequestBody User user) {
@@ -182,7 +182,7 @@ public class UserHandler {
      * 注册
      *
      * @param regUserDTO 用户注册信息
-     * @return 结果
+     * @return msg
      */
     @PostMapping("/reg")
     public JSONObject reg(@RequestBody RegUserDTO regUserDTO) {
@@ -215,7 +215,7 @@ public class UserHandler {
      * 重置密码
      *
      * @param regUserDTO 需要 phone code password
-     * @return json
+     * @return msg
      */
     @PostMapping("/reset_password")
     public JSONObject resetPassword(@RequestBody RegUserDTO regUserDTO) {
@@ -246,7 +246,7 @@ public class UserHandler {
      * 修改密码
      *
      * @param updatePasswordDTO 当前密码 跟新密码
-     * @return json
+     * @return msg
      */
     @PostMapping("/update_password")
     public JSONObject updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
@@ -268,28 +268,46 @@ public class UserHandler {
 
     /**
      * 收藏帖子
+     *
+     * @param id     帖子ID
+     * @param action 0=取消收藏 其他=收藏
+     * @return msg
      */
-    @PostMapping("/star_post")
-    public JSONObject starPost(@RequestBody StarDTO starDTO) {
+    @GetMapping("/star_post")
+    public JSONObject starPost(@Param("id") int id, @Param("action") int action) {
         JSONObject json = new JSONObject();
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        Star star = new Star();
 
-        userRepository.starPost(starDTO);
-        json.put("success", true);
-        json.put("msg", "收藏成功!");
+        star.setUser_id(authId);
+        star.setPost_id(id);
+        if (action == 0) {
+            userRepository.unstarPost(star);
+            json.put("success", true);
+            json.put("msg", "取消成功!");
+        } else {
+            userRepository.starPost(star);
+            json.put("success", true);
+            json.put("msg", "收藏成功!");
+        }
 
         return json;
     }
 
     /**
-     * 取消收藏帖子
+     * 获取收藏帖子列表
+     *
+     * @return stars
      */
-    @GetMapping("/unstar_post")
-    public JSONObject unstarPost(@Param("id") int id) {
+    @GetMapping("/get_stars")
+    public JSONObject getStars() {
         JSONObject json = new JSONObject();
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        userRepository.unstarPost(id);
+        List<Star> stars = userRepository.getStars(authId);
+
         json.put("success", true);
-        json.put("msg", "取消成功!");
+        json.put("stars", stars);
 
         return json;
     }

@@ -69,19 +69,27 @@
         where user_id = #{user_id}
           and status = 1
         order by datetime desc
-        limit 10;
+        limit 10
 
     </select>
 
     <select id="findPostsDetail" resultType="PostDetail">
         select posts.*,
-               users.role,
-               users.username,
-               users.gender,
-               users.sign,
-               users.avatar
+        users.role,
+        users.username,
+        users.gender,
+        users.sign,
+        users.avatar
+        <if test="user_id != 0">
+            , stars.user_id star
+        </if>
         from posts
-                 inner join users on posts.id = #{id} and users.id = posts.user_id
+        inner join users on posts.id = #{id} and users.id = posts.user_id
+        <if test="user_id != 0">
+            left join stars on stars.user_id = #{user_id} and stars.post_id = #{id}
+        </if>
+        where posts.id = #{id}
+        limit 1
     </select>
 
     <update id="updateViews">

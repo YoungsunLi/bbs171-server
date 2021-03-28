@@ -1,6 +1,6 @@
 package net.lsun.bbs171.repository;
 
-import net.lsun.bbs171.entity.StarDTO;
+import net.lsun.bbs171.entity.Star;
 import net.lsun.bbs171.entity.User;
 
 import java.util.List;
@@ -22,7 +22,9 @@ public interface UserRepository {
 
     void updatePassword(int id, String password);
 
-    void starPost(StarDTO starDTO);
+    void starPost(Star star);
 
-    void unstarPost(int id);
+    void unstarPost(Star star);
+
+    List<Star> getStars(int id);
 }
