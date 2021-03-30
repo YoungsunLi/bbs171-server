@@ -73,7 +73,7 @@
 
     </select>
 
-    <select id="findPostsDetail" resultType="PostDetail">
+    <select id="findPostDetail" resultType="PostDetail">
         select posts.*,
         users.role,
         users.username,

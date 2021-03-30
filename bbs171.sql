@@ -11,7 +11,7 @@
  Target Server Version : 50733
  File Encoding         : 65001
 
- Date: 27/03/2021 20:20:53
+ Date: 30/03/2021 14:40:25
 */
 
 SET NAMES utf8mb4;
@@ -37,6 +37,26 @@ CREATE TABLE `comment`  (
   CONSTRAINT `form_id` FOREIGN KEY (`from_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `to_id` FOREIGN KEY (`to_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB AUTO_INCREMENT = 12530 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = DYNAMIC;
+
+-- ----------------------------
+-- Table structure for message
+-- ----------------------------
+DROP TABLE IF EXISTS `message`;
+CREATE TABLE `message`  (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) UNSIGNED NOT NULL COMMENT '接受消息的id',
+  `post_id` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '帖子id',
+  `post_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '帖子标题',
+  `from_id` int(11) UNSIGNED NULL DEFAULT NULL COMMENT '发送消息者id',
+  `from_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `type` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '消息类型 0 回复 1 系统消息',
+  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `read` int(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '阅读状态 0 未阅读 1 已阅读',
+  `datetime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`) USING BTREE,
+  INDEX `message_user_id`(`user_id`) USING BTREE,
+  INDEX `read`(`read`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 12530 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for posts

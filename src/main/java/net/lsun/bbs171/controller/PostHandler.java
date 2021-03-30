@@ -56,7 +56,7 @@ public class PostHandler {
         String authIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
         int authId = authIdStr.equals("anonymousUser") ? 0 : Integer.parseInt(authIdStr);
 
-        PostDetail post = postRepository.findPostsDetail(id, authId);
+        PostDetail post = postRepository.findPostDetail(id, authId);
 
         if (post != null) { //如果帖子存在
             if (post.getStatus() == 1) { //如果帖子已审核
@@ -145,7 +145,7 @@ public class PostHandler {
         int role = userRepository.findById(authId).getRole();
 
         if (role != 0) {
-            int postUserId = postRepository.findPostsDetail(id, authId).getUser_id();
+            int postUserId = postRepository.findPostDetail(id, authId).getUser_id();
             if (authId != postUserId) {
                 json.put("success", false);
                 json.put("msg", "非法操作!");

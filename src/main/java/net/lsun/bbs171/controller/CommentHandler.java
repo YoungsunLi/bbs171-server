@@ -3,8 +3,12 @@ package net.lsun.bbs171.controller;
 import com.alibaba.fastjson.JSONObject;
 import net.lsun.bbs171.entity.Comment;
 import net.lsun.bbs171.entity.CommentAndUser;
+import net.lsun.bbs171.entity.Message;
+import net.lsun.bbs171.entity.PostDetail;
 import net.lsun.bbs171.repository.CommentRepository;
+import net.lsun.bbs171.repository.MessageRepository;
 import net.lsun.bbs171.repository.PostRepository;
+import net.lsun.bbs171.repository.UserRepository;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +26,13 @@ public class CommentHandler {
     @Resource
     PostRepository postRepository;
 
+    @Resource
+    MessageRepository messageRepository;
+
+    @Resource
+    UserRepository userRepository;
+
+
     /**
      * 回复帖子
      *
@@ -36,6 +47,24 @@ public class CommentHandler {
 
         commentRepository.submit(comment);
         postRepository.updateCommentCount(comment.getPost_id(), 1);
+
+        // 添加 message 冗余数据
+        PostDetail postDetail = postRepository.findPostDetail(comment.getPost_id(), 0);
+        int userId = comment.getTo_id() != 0 ? comment.getTo_id() : postDetail.getUser_id();
+        if (userId != comment.getFrom_id()) {
+            Message message = new Message();
+            String fromName = userRepository.findById(comment.getFrom_id()).getUsername();
+
+            message.setUser_id(userId);
+            message.setPost_id(comment.getPost_id());
+            message.setPost_title(postDetail.getTitle());
+            message.setFrom_id(authId);
+            message.setFrom_name(fromName);
+            message.setType(0);
+            message.setContent(comment.getContent());
+
+            messageRepository.addMessage(message);
+        }
 
         json.put("success", true);
         json.put("msg", "回复成功!");
