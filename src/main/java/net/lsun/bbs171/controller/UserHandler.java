@@ -7,6 +7,7 @@ import net.lsun.bbs171.repository.UserRepository;
 import net.lsun.bbs171.utils.AliyunUtil;
 import net.lsun.bbs171.utils.CacheUtil;
 import net.lsun.bbs171.utils.JWTUtil;
+import net.lsun.bbs171.utils.Util;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -201,6 +202,7 @@ public class UserHandler {
             user.setUsername(regUserDTO.getUsername());
             user.setPassword(bCryptPasswordEncoder.encode(regUserDTO.getPassword()));
             user.setGender(regUserDTO.getGender());
+            user.setAvatar(Util.getMD5(regUserDTO.getPhone()));
 
             userRepository.save(user);
 
