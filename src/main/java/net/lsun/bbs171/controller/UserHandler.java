@@ -154,6 +154,8 @@ public class UserHandler {
         String code = AliyunUtil.generateCode();
         CacheUtil.putData(user.getPhone(), code);
 
+        System.out.println("验证码: " + code);
+
         return AliyunUtil.sendCode(user.getPhone(), code);
     }
 
@@ -175,6 +177,8 @@ public class UserHandler {
         }
         String code = AliyunUtil.generateCode();
         CacheUtil.putData(user.getPhone(), code);
+
+        System.out.println("验证码: " + code);
 
         return AliyunUtil.sendCode(user.getPhone(), code);
     }

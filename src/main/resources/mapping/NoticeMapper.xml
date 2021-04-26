@@ -9,4 +9,12 @@
         values (#{user_id}, #{content})
     </insert>
 
+    <select id="getLatest" resultType="Notice">
+        select *
+        from notices
+        where status = 1
+        order by datetime desc
+        limit 1
+    </select>
+
 </mapper>

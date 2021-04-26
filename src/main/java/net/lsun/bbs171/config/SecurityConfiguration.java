@@ -22,7 +22,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             "/post/get_posts_for_index",
 
-            "/comment/get_all"
+            "/comment/get_all",
+
+            "/notice/get_latest"
     };
 
     // 验不验证都行的路径

@@ -5,10 +5,7 @@ import net.lsun.bbs171.entity.Notice;
 import net.lsun.bbs171.repository.NoticeRepository;
 import net.lsun.bbs171.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -45,6 +42,23 @@ public class NoticeHandler {
             json.put("success", true);
             json.put("msg", "发布成功!");
         }
+
+        return json;
+    }
+
+    /**
+     * 获取最新的一条公告
+     *
+     * @return notice
+     */
+    @GetMapping("/get_latest")
+    public JSONObject getLatest() {
+        JSONObject json = new JSONObject();
+
+        Notice notice = noticeRepository.getLatest();
+
+        json.put("success", true);
+        json.put("data", notice);
 
         return json;
     }
