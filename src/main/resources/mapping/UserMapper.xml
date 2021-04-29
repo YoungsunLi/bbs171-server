@@ -74,4 +74,9 @@
         where stars.user_id = #{id}
     </select>
 
+    <update id="updateLastTime" parameterType="int">
+        update users
+        set lastTime = now()
+        where id = #{id}
+    </update>
 </mapper>

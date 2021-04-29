@@ -3,6 +3,7 @@ package net.lsun.bbs171.controller;
 import com.alibaba.fastjson.JSONObject;
 import net.lsun.bbs171.entity.Message;
 import net.lsun.bbs171.repository.MessageRepository;
+import net.lsun.bbs171.repository.UserRepository;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,9 @@ public class MessageHandler {
     @Resource
     MessageRepository messageRepository;
 
+    @Resource
+    UserRepository userRepository;
+
     /**
      * 获取未读消息数
      *
@@ -29,6 +33,9 @@ public class MessageHandler {
         JSONObject json = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         int count = messageRepository.findMessageCount(authId);
+
+        // 更新在线时间
+        userRepository.updateLastTime(authId);
 
         json.put("success", true);
         json.put("count", count);

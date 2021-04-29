@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lsun.bbs171.repository.SystemRepository">
+
+    <select id="getInfo" resultType="SystemInfoDTO">
+        select count(users.id)                                                                     as totalUsers,
+               count(if(timediff(now(), users.lastTime) &lt; '00:10:00', 1, null))                 as totalOnlineUsers,
+               (select count(id) from posts)                                                       as totalPosts,
+               (select count(id) from posts where timediff(now(), posts.datetime) &lt; '24:00:00') as totalNewPosts
+        from users
+    </select>
+
+</mapper>

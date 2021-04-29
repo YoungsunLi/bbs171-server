@@ -27,4 +27,6 @@ public interface UserRepository {
     void unstarPost(Star star);
 
     List<Star> getStars(int id);
+
+    void updateLastTime(int id);
 }

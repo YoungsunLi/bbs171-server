@@ -24,7 +24,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
             "/comment/get_all",
 
-            "/notice/get_latest"
+            "/notice/get_latest",
+
+            "/system/get_info"
     };
 
     // 验不验证都行的路径
