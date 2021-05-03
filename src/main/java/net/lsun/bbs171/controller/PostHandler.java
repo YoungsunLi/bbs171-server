@@ -197,4 +197,21 @@ public class PostHandler {
 
         return json;
     }
+
+    /**
+     * 获取热帖
+     *
+     * @return posts
+     */
+    @GetMapping("/get_hot")
+    public JSONObject getHot() {
+        JSONObject json = new JSONObject();
+
+        List<PostForHot> posts = postRepository.getHot();
+
+        json.put("success", true);
+        json.put("data", posts);
+
+        return json;
+    }
 }

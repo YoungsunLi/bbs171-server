@@ -21,6 +21,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/user/reset_password",
 
             "/post/get_posts_for_index",
+            "/post/get_hot",
 
             "/comment/get_all",
 

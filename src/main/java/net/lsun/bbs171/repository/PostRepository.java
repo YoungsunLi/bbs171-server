@@ -23,4 +23,6 @@ public interface PostRepository {
     void updateStatus(@Param("id") int id, @Param("status") int status);
 
     void updateHighlight(@Param("id") int id, @Param("highlight") int highlight);
+
+    List<PostForHot> getHot();
 }

@@ -116,4 +116,18 @@
         where id = #{id}
     </update>
 
+    <select id="getHot" resultType="PostForHot">
+        select id, title, hot_count.comment
+        from posts
+                 inner join (
+            select post_id, count(*) as comment
+            from (select post_id from comment where date_sub(curdate(), interval 7 day) &lt; date(datetime)) as hot
+            group by post_id
+            order by comment desc
+            limit 5) as hot_count
+        where posts.id = hot_count.post_id
+          and posts.status = 1
+        order by comment desc
+    </select>
+
 </mapper>
