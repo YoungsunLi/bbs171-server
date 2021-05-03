@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.lsun.bbs171.repository.ViewRepository">
+
+    <insert id="submit" parameterType="Views">
+        insert into views(
+        post_id
+        <if test="viewer_id != 0">
+            , viewer_id
+        </if>)
+        values (
+        #{post_id}
+        <if test="viewer_id != 0">
+            , #{viewer_id}
+        </if>)
+    </insert>
+
+</mapper>

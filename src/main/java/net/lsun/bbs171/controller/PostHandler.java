@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import net.lsun.bbs171.entity.*;
 import net.lsun.bbs171.repository.PostRepository;
 import net.lsun.bbs171.repository.UserRepository;
+import net.lsun.bbs171.repository.ViewRepository;
 import net.lsun.bbs171.utils.Util;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,9 @@ public class PostHandler {
 
     @Resource
     private UserRepository userRepository;
+
+    @Resource
+    private ViewRepository viewRepository;
 
     /**
      * 发布帖子
@@ -50,8 +54,6 @@ public class PostHandler {
      */
     @GetMapping("/detail")
     public JSONObject getPostForDetail(@Param("id") int id) {
-        postRepository.updateViews(id);
-
         JSONObject json = new JSONObject();
         String authIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
         int authId = authIdStr.equals("anonymousUser") ? 0 : Integer.parseInt(authIdStr);
@@ -60,6 +62,13 @@ public class PostHandler {
 
         if (post != null) { //如果帖子存在
             if (post.getStatus() == 1) { //如果帖子已审核
+                postRepository.updateViews(id);
+
+                Views views = new Views();
+                views.setPost_id(id);
+                views.setViewer_id(authId);
+                viewRepository.submit(views);
+
                 json.put("success", true);
                 json.put("data", post);
                 return json;
