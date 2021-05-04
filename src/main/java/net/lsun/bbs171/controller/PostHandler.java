@@ -43,6 +43,8 @@ public class PostHandler {
         json.put("success", true);
         json.put("msg", "发布成功!");
 
+        userRepository.updateExperience(authId, 20);
+
         return json;
     }
 

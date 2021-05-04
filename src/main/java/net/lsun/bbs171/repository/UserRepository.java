@@ -29,4 +29,6 @@ public interface UserRepository {
     List<Star> getStars(int id);
 
     void updateLastTime(int id);
+
+    void updateExperience(int id, int experience);
 }

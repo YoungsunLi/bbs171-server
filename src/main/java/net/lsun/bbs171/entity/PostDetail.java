@@ -24,6 +24,7 @@ public class PostDetail {
     private String gender;
     private String sign;
     private String avatar;
+    private String level_name;
     private int star;
 
 

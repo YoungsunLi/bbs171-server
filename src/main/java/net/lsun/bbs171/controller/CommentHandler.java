@@ -69,6 +69,8 @@ public class CommentHandler {
         json.put("success", true);
         json.put("msg", "回复成功!");
 
+        userRepository.updateExperience(authId, 5);
+
         return json;
     }
 

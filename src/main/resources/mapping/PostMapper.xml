@@ -19,7 +19,12 @@
         posts.highlight,
         posts.user_id,
         users.username,
-        users.avatar
+        users.avatar,
+        (select level_name
+        from level
+        where users.experience >= experience
+        order by experience desc
+        limit 1 ) as level_name
         from posts
         inner join users on users.id = posts.user_id and posts.status = 1
         <if test="category != 0">
@@ -79,7 +84,12 @@
         users.username,
         users.gender,
         users.sign,
-        users.avatar
+        users.avatar,
+        (select level_name
+        from level
+        where users.experience >= experience
+        order by experience desc
+        limit 1 ) as level_name
         <if test="user_id != 0">
             , stars.user_id star
         </if>

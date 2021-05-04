@@ -16,6 +16,7 @@ public class PostForIndex {
     private int highlight;
     private int user_id;
     private String username;
+    private String level_name;
     private String avatar;
 
     public String getDatetime() {

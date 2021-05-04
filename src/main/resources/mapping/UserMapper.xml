@@ -9,7 +9,12 @@
     </select>
 
     <select id="findById" parameterType="int" resultType="User">
-        select *
+        select *,
+               (select level_name
+                from level
+                where users.experience >= experience
+                order by experience desc
+                limit 1) as level_name
         from users
         where id = #{id}
     </select>
@@ -77,6 +82,12 @@
     <update id="updateLastTime" parameterType="int">
         update users
         set lastTime = now()
+        where id = #{id}
+    </update>
+
+    <update id="updateExperience" parameterType="int">
+        update users
+        set experience = experience + #{experience}
         where id = #{id}
     </update>
 </mapper>

@@ -15,9 +15,15 @@ public class User {
     private String gender;
     private String sign;
     private String avatar;
+    private String level_name;
     private Timestamp datetime;
+    private Timestamp lastTime;
 
     public String getDatetime() {
         return Util.parseTimestampToString(datetime);
+    }
+
+    public String getLastTime() {
+        return Util.parseTimestampToString(lastTime);
     }
 }
