@@ -11,6 +11,7 @@ public class PostForManage {
     private String title;
     private Timestamp datetime;
     private int category;
+    private String category_name;
     private int views;
     private int status;
     private int report;
@@ -20,9 +21,5 @@ public class PostForManage {
 
     public String getDatetime() {
         return Util.parseTimestampToString(datetime);
-    }
-
-    public String getCategory() {
-        return Util.parseCategory(category);
     }
 }

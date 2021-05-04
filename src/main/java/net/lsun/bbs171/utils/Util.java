@@ -38,24 +38,6 @@ public class Util {
     }
 
     /**
-     * 板块标识符转中文名
-     *
-     * @param category 板块标识符
-     * @return 板块中文名 TODO 后面要数据库
-     */
-    public static String parseCategory(int category) {
-        switch (category) {
-            case 2:
-                return "学习";
-            case 3:
-                return "生活";
-            case 1:
-            default:
-                return "默认";
-        }
-    }
-
-    /**
      * 排序类型转列名
      *
      * @param sort 排序类型

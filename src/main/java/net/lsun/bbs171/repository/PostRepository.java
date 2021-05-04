@@ -25,4 +25,6 @@ public interface PostRepository {
     void updateHighlight(@Param("id") int id, @Param("highlight") int highlight);
 
     List<PostForHot> getHot();
+
+    List<Category> getCategory();
 }

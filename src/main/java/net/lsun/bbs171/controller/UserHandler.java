@@ -317,4 +317,22 @@ public class UserHandler {
 
         return json;
     }
+
+
+    /**
+     * 获取等级信息
+     *
+     * @return level
+     */
+    @GetMapping("get_level")
+    public JSONObject getLevel() {
+        JSONObject json = new JSONObject();
+
+        List<Level> levels = userRepository.getLevel();
+
+        json.put("success", true);
+        json.put("data", levels);
+
+        return json;
+    }
 }

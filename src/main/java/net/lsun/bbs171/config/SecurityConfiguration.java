@@ -19,16 +19,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/user/send_code_exist",
             "/user/reg",
             "/user/reset_password",
+            "/user/get_level",
+
 
             "/post/get_posts_for_index",
             "/post/get_hot",
+            "/post/get_category",
 
             "/comment/get_all",
 
             "/notice/get_latest",
 
             "/system/get_info",
-            "/system/get_user_level"
     };
 
     // 验不验证都行的路径

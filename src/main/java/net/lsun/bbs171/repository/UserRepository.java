@@ -1,5 +1,6 @@
 package net.lsun.bbs171.repository;
 
+import net.lsun.bbs171.entity.Level;
 import net.lsun.bbs171.entity.Star;
 import net.lsun.bbs171.entity.User;
 
@@ -31,4 +32,6 @@ public interface UserRepository {
     void updateLastTime(int id);
 
     void updateExperience(int id, int experience);
+
+    List<Level> getLevel();
 }

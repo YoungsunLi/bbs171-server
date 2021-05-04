@@ -11,6 +11,7 @@ public class PostForIndex {
     private String title;
     private Timestamp datetime;
     private int category;
+    private String category_name;
     private int views;
     private int comment;
     private int highlight;
@@ -21,9 +22,5 @@ public class PostForIndex {
 
     public String getDatetime() {
         return Util.parseTimestampToXxxBefore(datetime);
-    }
-
-    public String getCategory() {
-        return Util.parseCategory(category);
     }
 }

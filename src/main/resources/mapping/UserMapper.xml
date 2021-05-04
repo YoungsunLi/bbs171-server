@@ -90,4 +90,9 @@
         set experience = experience + #{experience}
         where id = #{id}
     </update>
+
+    <select id="getLevel" resultType="Level">
+        select *
+        from level
+    </select>
 </mapper>

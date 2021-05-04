@@ -223,4 +223,21 @@ public class PostHandler {
 
         return json;
     }
+
+    /**
+     * 获取分类信息
+     *
+     * @return category
+     */
+    @GetMapping("get_category")
+    public JSONObject getCategory() {
+        JSONObject json = new JSONObject();
+
+        List<Category> categorys = postRepository.getCategory();
+
+        json.put("success", true);
+        json.put("data", categorys);
+
+        return json;
+    }
 }

@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface SystemRepository {
     SystemInfoDTO getInfo();
-
-    List<Level> getUserLevel();
 }

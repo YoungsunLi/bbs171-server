@@ -12,9 +12,4 @@
         from users
     </select>
 
-    <select id="getUserLevel" resultType="Level">
-        select *
-        from level
-    </select>
-
 </mapper>

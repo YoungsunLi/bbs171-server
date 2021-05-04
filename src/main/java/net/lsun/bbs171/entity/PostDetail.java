@@ -13,6 +13,7 @@ public class PostDetail {
     private String content;
     private Timestamp datetime;
     private int category;
+    private String category_name;
     private int views;
     private int status;
     private int report;
@@ -30,9 +31,5 @@ public class PostDetail {
 
     public String getDatetime() {
         return Util.parseTimestampToXxxBefore(datetime);
-    }
-
-    public String getCategory() {
-        return Util.parseCategory(category);
     }
 }
