@@ -5,6 +5,7 @@ import net.lsun.bbs171.entity.*;
 import net.lsun.bbs171.repository.PostRepository;
 import net.lsun.bbs171.repository.UserRepository;
 import net.lsun.bbs171.repository.ViewRepository;
+import net.lsun.bbs171.utils.SensitiveFilterUtil;
 import net.lsun.bbs171.utils.Util;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,6 +27,9 @@ public class PostHandler {
     @Resource
     private ViewRepository viewRepository;
 
+    @Resource
+    private SensitiveFilterUtil sensitiveFilter;
+
     /**
      * 发布帖子
      *
@@ -37,6 +41,9 @@ public class PostHandler {
         JSONObject json = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         post.setUser_id(authId);
+
+        post.setTitle(sensitiveFilter.filter(post.getContent()));
+        post.setContent(sensitiveFilter.filter(post.getContent()));
 
         postRepository.submit(post);
 

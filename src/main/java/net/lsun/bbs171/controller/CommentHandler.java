@@ -9,6 +9,7 @@ import net.lsun.bbs171.repository.CommentRepository;
 import net.lsun.bbs171.repository.MessageRepository;
 import net.lsun.bbs171.repository.PostRepository;
 import net.lsun.bbs171.repository.UserRepository;
+import net.lsun.bbs171.utils.SensitiveFilterUtil;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,8 @@ public class CommentHandler {
     @Resource
     UserRepository userRepository;
 
+    @Resource
+    private SensitiveFilterUtil sensitiveFilter;
 
     /**
      * 回复帖子
@@ -44,6 +47,8 @@ public class CommentHandler {
         JSONObject json = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         comment.setFrom_id(authId);
+
+        comment.setContent(sensitiveFilter.filter(comment.getContent()));
 
         commentRepository.submit(comment);
         postRepository.updateCommentCount(comment.getPost_id(), 1);
