@@ -12,4 +12,38 @@
         from users
     </select>
 
+    <select id="getAdminUsers" resultType="User">
+        select *,
+               (select level_name
+                from level
+                where users.experience >= experience
+                order by experience desc
+                limit 1) as level_name
+        from users
+        where role = 0
+    </select>
+
+    <insert id="addCategory" parameterType="Category">
+        insert into category(category_name)
+        values (#{category_name})
+    </insert>
+
+    <delete id="delCategory" parameterType="Category">
+        delete
+        from category
+        where id = #{id}
+    </delete>
+
+    <select id="getCategoryUseCount" parameterType="Category" resultType="int">
+        select count(id)
+        from posts
+        where category = #{id}
+    </select>
+
+
+    <update id="updateCategory" parameterType="Category">
+        update category
+        set category_name = #{category_name}
+        where id = #{id}
+    </update>
 </mapper>
