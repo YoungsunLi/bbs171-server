@@ -19,4 +19,8 @@ public interface SystemRepository {
     int getCategoryUseCount(Category category);
 
     void updateCategory(Category category);
+
+    void updateUserRoleToAdmin(User user);
+
+    void updateUserRoleToUser(User user);
 }

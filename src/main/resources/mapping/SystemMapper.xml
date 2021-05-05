@@ -23,6 +23,18 @@
         where role = 0
     </select>
 
+    <update id="updateUserRoleToAdmin" parameterType="User">
+        update users
+        set role = 0
+        where phone = #{phone}
+    </update>
+
+    <update id="updateUserRoleToUser" parameterType="User">
+        update users
+        set role = 1
+        where phone = #{phone}
+    </update>
+
     <insert id="addCategory" parameterType="Category">
         insert into category(category_name)
         values (#{category_name})

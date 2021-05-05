@@ -48,17 +48,83 @@ public class SystemHandler {
     public JSONObject getAdminUsers() {
         JSONObject json = new JSONObject();
 
-        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
-        User dbUser = userRepository.findById(authId);
-
-        if (dbUser.getRole() != 100) {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
-        } else {
+        if (auth()) {
             List<User> users = systemRepository.getAdminUsers();
 
             json.put("success", true);
             json.put("data", users);
+        } else {
+            json.put("success", false);
+            json.put("msg", "非法操作!");
+        }
+
+        return json;
+    }
+
+    /**
+     * 添加管理员
+     *
+     * @return msg
+     */
+    @PostMapping("add_admin_user")
+    public JSONObject addAdminUser(@RequestBody User user) {
+        JSONObject json = new JSONObject();
+
+        if (auth()) {
+            User dbUser = userRepository.findByPhone(user.getPhone());
+
+            if (dbUser != null) {
+                if (dbUser.getRole() != 1) {
+                    json.put("success", false);
+                    json.put("msg", "用户 " + dbUser.getUsername() + " 已经是管理员!");
+                } else {
+                    systemRepository.updateUserRoleToAdmin(user);
+
+                    json.put("success", true);
+                    json.put("msg", "添加成功!");
+                }
+            } else {
+                json.put("success", false);
+                json.put("msg", "手机号为 " + user.getPhone() + " 的用户不存在!");
+            }
+        } else {
+            json.put("success", false);
+            json.put("msg", "非法操作!");
+        }
+
+        return json;
+    }
+
+
+    /**
+     * 删除管理员
+     *
+     * @return msg
+     */
+    @PostMapping("del_admin_user")
+    public JSONObject delAdminUser(@RequestBody User user) {
+        JSONObject json = new JSONObject();
+
+        if (auth()) {
+            User dbUser = userRepository.findByPhone(user.getPhone());
+
+            if (dbUser != null) {
+                if (dbUser.getRole() == 0) {
+                    systemRepository.updateUserRoleToUser(user);
+
+                    json.put("success", true);
+                    json.put("msg", "删除成功!");
+                } else {
+                    json.put("success", false);
+                    json.put("msg", "用户 " + dbUser.getUsername() + " 不是普通管理员!");
+                }
+            } else {
+                json.put("success", false);
+                json.put("msg", "手机号为 " + user.getPhone() + " 的用户不存在!");
+            }
+        } else {
+            json.put("success", false);
+            json.put("msg", "非法操作!");
         }
 
         return json;
@@ -73,17 +139,14 @@ public class SystemHandler {
     public JSONObject addCategory(@RequestBody Category category) {
         JSONObject json = new JSONObject();
 
-        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
-        User dbUser = userRepository.findById(authId);
-
-        if (dbUser.getRole() != 100) {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
-        } else {
+        if (auth()) {
             systemRepository.addCategory(category);
 
             json.put("success", true);
             json.put("msg", "添加成功!");
+        } else {
+            json.put("success", false);
+            json.put("msg", "非法操作!");
         }
 
         return json;
@@ -98,13 +161,7 @@ public class SystemHandler {
     public JSONObject delCategory(@RequestBody Category category) {
         JSONObject json = new JSONObject();
 
-        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
-        User dbUser = userRepository.findById(authId);
-
-        if (dbUser.getRole() != 100) {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
-        } else {
+        if (auth()) {
             int count = systemRepository.getCategoryUseCount(category);
 
             if (count > 0) {
@@ -116,6 +173,9 @@ public class SystemHandler {
                 json.put("success", true);
                 json.put("msg", "删除成功!");
             }
+        } else {
+            json.put("success", false);
+            json.put("msg", "非法操作!");
         }
 
         return json;
@@ -130,21 +190,24 @@ public class SystemHandler {
     public JSONObject updateCategory(@RequestBody Category category) {
         JSONObject json = new JSONObject();
 
-        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
-        User dbUser = userRepository.findById(authId);
-
-        if (dbUser.getRole() != 100) {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
-        } else {
+        if (auth()) {
             systemRepository.updateCategory(category);
 
             json.put("success", true);
             json.put("msg", "修改成功!");
-
+        } else {
+            json.put("success", false);
+            json.put("msg", "非法操作!");
         }
 
         return json;
+    }
+
+    private boolean auth() {
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+        User dbUser = userRepository.findById(authId);
+
+        return dbUser.getRole() == 100;
     }
 
 }
