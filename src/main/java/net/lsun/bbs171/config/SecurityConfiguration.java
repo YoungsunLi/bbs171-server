@@ -29,6 +29,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             "/comment/get_all",
 
             "/notice/get_latest",
+            "/notice/get_all",
 
             "/system/get_info",
     };

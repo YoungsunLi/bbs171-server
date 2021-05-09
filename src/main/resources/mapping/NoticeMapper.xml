@@ -17,4 +17,12 @@
         limit 1
     </select>
 
+    <select id="getAll" resultType="Notice">
+        select *,
+               (select username from users where notices.user_id = users.id) as username
+        from notices
+        where status = 1
+        order by datetime desc
+    </select>
+
 </mapper>

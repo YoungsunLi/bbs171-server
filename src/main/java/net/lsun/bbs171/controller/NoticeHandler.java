@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @RestController
 @RequestMapping("/notice")
@@ -59,6 +60,23 @@ public class NoticeHandler {
 
         json.put("success", true);
         json.put("data", notice);
+
+        return json;
+    }
+
+    /**
+     * 获取公告
+     *
+     * @return notice
+     */
+    @GetMapping("/get_all")
+    public JSONObject getAll() {
+        JSONObject json = new JSONObject();
+
+        List<Notice> notices = noticeRepository.getAll();
+
+        json.put("success", true);
+        json.put("data", notices);
 
         return json;
     }
