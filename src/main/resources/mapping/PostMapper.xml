@@ -59,7 +59,7 @@
             and category = #{category}
         </if>
         <if test="status != 3">
-            and status = #{status}
+            and posts.status = #{status}
         </if>
         <if test="keywords != ''">
             and title REGEXP #{keywords}

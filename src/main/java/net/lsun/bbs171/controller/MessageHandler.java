@@ -2,6 +2,7 @@ package net.lsun.bbs171.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import net.lsun.bbs171.entity.Message;
+import net.lsun.bbs171.entity.User;
 import net.lsun.bbs171.repository.MessageRepository;
 import net.lsun.bbs171.repository.UserRepository;
 import org.apache.ibatis.annotations.Param;
@@ -33,12 +34,18 @@ public class MessageHandler {
         JSONObject json = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         int count = messageRepository.findMessageCount(authId);
-
-        // 更新在线时间
-        userRepository.updateLastTime(authId);
-
+        User dbUser = userRepository.findById(authId);
         json.put("success", true);
-        json.put("count", count);
+
+        if (dbUser.getStatus() != 1) {
+            json.put("msg", "你已被限制登录!");
+            json.put("illegal", true);
+        } else {
+            // 更新在线时间
+            userRepository.updateLastTime(authId);
+
+            json.put("count", count);
+        }
 
         return json;
     }

@@ -107,9 +107,12 @@ public class UserHandler {
     @PostMapping("/token")
     public JSONObject token(@RequestBody User user) {
         JSONObject json = new JSONObject();
-        try {
-            User dbUser = userRepository.findByPhone(user.getPhone());
-            if (dbUser != null) {
+        User dbUser = userRepository.findByPhone(user.getPhone());
+        if (dbUser != null) {
+            if (dbUser.getStatus() != 1) {
+                json.put("success", false);
+                json.put("msg", "你已被限制登录!");
+            } else {
                 if (bCryptPasswordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
                     // 创建 token
                     String token = JWTUtil.generateToken(dbUser.getId());
@@ -123,13 +126,10 @@ public class UserHandler {
                     json.put("success", false);
                     json.put("msg", "密码错误!");
                 }
-            } else {
-                json.put("success", false);
-                json.put("msg", "用户不存在!");
             }
-        } catch (Exception e) {
+        } else {
             json.put("success", false);
-            json.put("msg", e.getMessage());
+            json.put("msg", "用户不存在!");
         }
 
         return json;

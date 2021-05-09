@@ -15,7 +15,9 @@ public class User {
     private String gender;
     private String sign;
     private String avatar;
+    private int experience;
     private String level_name;
+    private int status;
     private Timestamp datetime;
     private Timestamp lastTime;
 
