@@ -1,6 +1,7 @@
 package net.lsun.bbs171.repository;
 
 import net.lsun.bbs171.entity.Category;
+import net.lsun.bbs171.entity.Notice;
 import net.lsun.bbs171.entity.SystemInfoDTO;
 import net.lsun.bbs171.entity.User;
 
@@ -28,4 +29,8 @@ public interface SystemRepository {
     void resetPassword(int id, String password);
 
     void updateUserStatus(int id, int status);
+
+    List<Notice> getNotices(int status, String keywords);
+
+    void updateNoticeStatus(int id, int status);
 }

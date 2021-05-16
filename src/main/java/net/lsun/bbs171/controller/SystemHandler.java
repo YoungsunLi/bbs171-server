@@ -2,6 +2,7 @@ package net.lsun.bbs171.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import net.lsun.bbs171.entity.Category;
+import net.lsun.bbs171.entity.Notice;
 import net.lsun.bbs171.entity.SystemInfoDTO;
 import net.lsun.bbs171.entity.User;
 import net.lsun.bbs171.repository.SystemRepository;
@@ -297,6 +298,48 @@ public class SystemHandler {
         return res;
     }
 
+    /**
+     * 获取公告列表
+     *
+     * @return users
+     */
+    @GetMapping("get_notices")
+    public JSONObject getNotices(@Param("status") int status, @Param("keywords") String keywords) {
+        JSONObject json = new JSONObject();
+
+        if (auth(0)) {
+            List<Notice> notices = systemRepository.getNotices(status, keywords);
+
+            json.put("success", true);
+            json.put("data", notices);
+        } else {
+            json.put("success", false);
+            json.put("msg", "非法操作!");
+        }
+
+        return json;
+    }
+
+    /**
+     * 更新公告状态
+     *
+     * @return users
+     */
+    @GetMapping("update_notice_status")
+    public JSONObject updateNoticeStatus(@Param("id") int id, @Param("status") int status) {
+        JSONObject json = new JSONObject();
+        if (auth(0)) {
+            systemRepository.updateNoticeStatus(id, status);
+
+            json.put("success", true);
+            json.put("msg", "操作成功!");
+        } else {
+            json.put("success", false);
+            json.put("msg", "非法操作!");
+        }
+
+        return json;
+    }
 
     private boolean auth(int role) {
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
