@@ -1,10 +1,7 @@
 package net.lsun.bbs171.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import net.lsun.bbs171.entity.Comment;
-import net.lsun.bbs171.entity.CommentAndUser;
-import net.lsun.bbs171.entity.Message;
-import net.lsun.bbs171.entity.PostDetail;
+import net.lsun.bbs171.entity.*;
 import net.lsun.bbs171.repository.CommentRepository;
 import net.lsun.bbs171.repository.MessageRepository;
 import net.lsun.bbs171.repository.PostRepository;
@@ -92,7 +89,9 @@ public class CommentHandler {
         Comment comment = commentRepository.findComment(id);
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        if (comment.getFrom_id() == authId) {
+        User dbUser = userRepository.findById(authId);
+
+        if (comment.getFrom_id() == authId || dbUser.getRole() == 0) {
             commentRepository.delComment(id);
             postRepository.updateCommentCount(comment.getPost_id(), -1);
             res.put("success", true);
