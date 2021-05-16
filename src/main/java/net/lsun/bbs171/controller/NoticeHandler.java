@@ -65,7 +65,7 @@ public class NoticeHandler {
     }
 
     /**
-     * 获取公告
+     * 获取公告列表
      *
      * @return notice
      */

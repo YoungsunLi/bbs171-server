@@ -122,7 +122,7 @@ public class PostHandler {
     /**
      * 查询帖子列表以及对应的作者信息(管理帖子页)
      *
-     * @param category 板块: 0=综合, 1=默认, 2=学习, 3=生活.
+     * @param category 板块: 自定义.
      * @param sort     排序方式: 0=按最新, 1=按热度, 2=按评论.
      * @param status   帖子状态: 3=全部, 0=未审核, 1=已审核, 2=已删除.
      * @param keywords 搜索标题关键字
