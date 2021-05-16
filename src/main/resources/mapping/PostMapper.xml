@@ -140,7 +140,7 @@
         from posts
                  inner join (
             select post_id, count(*) as comment
-            from (select post_id from comment where date_sub(curdate(), interval 7 day) &lt; date(datetime)) as hot
+            from (select post_id from comment where date_sub(curdate(), interval 7 day) &lt; date(datetime) and status = 1) as hot
             group by post_id
             order by comment desc
             limit 5) as hot_count
