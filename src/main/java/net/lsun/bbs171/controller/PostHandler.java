@@ -42,7 +42,7 @@ public class PostHandler {
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         post.setUser_id(authId);
 
-        post.setTitle(sensitiveFilter.filter(post.getContent()));
+        post.setTitle(sensitiveFilter.filter(post.getTitle()));
         post.setContent(sensitiveFilter.filter(post.getContent()));
 
         postRepository.submit(post);
