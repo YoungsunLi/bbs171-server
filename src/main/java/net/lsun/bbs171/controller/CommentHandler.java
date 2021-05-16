@@ -44,7 +44,7 @@ public class CommentHandler {
      */
     @PostMapping("/submit")
     public JSONObject submit(@RequestBody Comment comment) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         comment.setFrom_id(authId);
 
@@ -71,12 +71,12 @@ public class CommentHandler {
             messageRepository.addMessage(message);
         }
 
-        json.put("success", true);
-        json.put("msg", "回复成功!");
+        res.put("success", true);
+        res.put("msg", "回复成功!");
 
         userRepository.updateExperience(authId, 5);
 
-        return json;
+        return res;
     }
 
 
@@ -88,21 +88,21 @@ public class CommentHandler {
      */
     @GetMapping("del_comment")
     public JSONObject delComment(@Param("id") int id) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         Comment comment = commentRepository.findComment(id);
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
         if (comment.getFrom_id() == authId) {
             commentRepository.delComment(id);
             postRepository.updateCommentCount(comment.getPost_id(), -1);
-            json.put("success", true);
-            json.put("msg", "删除成功!");
+            res.put("success", true);
+            res.put("msg", "删除成功!");
         } else {
-            json.put("success", false);
-            json.put("msg", "删除失败!");
+            res.put("success", false);
+            res.put("msg", "删除失败!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -113,12 +113,12 @@ public class CommentHandler {
      */
     @GetMapping("/get_all")
     public JSONObject getAll(@Param("id") int id) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         List<CommentAndUser> comment = commentRepository.findAllComment(id);
 
-        json.put("success", true);
-        json.put("data", comment);
+        res.put("success", true);
+        res.put("data", comment);
 
-        return json;
+        return res;
     }
 }

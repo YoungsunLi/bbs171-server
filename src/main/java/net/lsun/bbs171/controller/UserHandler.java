@@ -29,11 +29,11 @@ public class UserHandler {
 
     @GetMapping("/findAll")
     public JSONObject findALl() {
-        JSONObject json = new JSONObject();
-        json.put("success", true);
-        json.put("data", userRepository.findAll());
+        JSONObject res = new JSONObject();
+        res.put("success", true);
+        res.put("data", userRepository.findAll());
 
-        return json;
+        return res;
     }
 
     /**
@@ -44,24 +44,24 @@ public class UserHandler {
      */
     @GetMapping("/get_user")
     public JSONObject getUser(@Param("id") int id) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         User user = userRepository.findById(id);
 
         if (user == null) {
-            json.put("success", false);
-            json.put("msg", "用户不存在!");
+            res.put("success", false);
+            res.put("msg", "用户不存在!");
 
         } else {
             user.setPassword(null);
             List<PostForUserHome> posts = postRepository.findPostsForUserHome(id);
             user.setPhone(null);
 
-            json.put("success", true);
-            json.put("user", user);
-            json.put("posts", posts);
+            res.put("success", true);
+            res.put("user", user);
+            res.put("posts", posts);
         }
 
-        return json;
+        return res;
     }
 
     @PostMapping("/save")
@@ -77,7 +77,7 @@ public class UserHandler {
      */
     @PostMapping("/update")
     public JSONObject update(@RequestBody User user) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
         user.setId(authId);
@@ -86,11 +86,11 @@ public class UserHandler {
         User dbUser = userRepository.findById(authId);
         dbUser.setPassword(null);
 
-        json.put("success", true);
-        json.put("msg", "修改成功!");
-        json.put("user", dbUser);
+        res.put("success", true);
+        res.put("msg", "修改成功!");
+        res.put("user", dbUser);
 
-        return json;
+        return res;
     }
 
     @DeleteMapping("/deleteById/{id}")
@@ -106,33 +106,33 @@ public class UserHandler {
      */
     @PostMapping("/token")
     public JSONObject token(@RequestBody User user) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         User dbUser = userRepository.findByPhone(user.getPhone());
         if (dbUser != null) {
             if (dbUser.getStatus() != 1) {
-                json.put("success", false);
-                json.put("msg", "你已被限制登录!");
+                res.put("success", false);
+                res.put("msg", "你已被限制登录!");
             } else {
                 if (bCryptPasswordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
                     // 创建 token
                     String token = JWTUtil.generateToken(dbUser.getId());
                     dbUser.setPassword(null);
 
-                    json.put("success", true);
-                    json.put("msg", "登陆成功!");
-                    json.put("token", token);
-                    json.put("user", dbUser);
+                    res.put("success", true);
+                    res.put("msg", "登陆成功!");
+                    res.put("token", token);
+                    res.put("user", dbUser);
                 } else {
-                    json.put("success", false);
-                    json.put("msg", "密码错误!");
+                    res.put("success", false);
+                    res.put("msg", "密码错误!");
                 }
             }
         } else {
-            json.put("success", false);
-            json.put("msg", "用户不存在!");
+            res.put("success", false);
+            res.put("msg", "用户不存在!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -145,11 +145,11 @@ public class UserHandler {
     public JSONObject sendCode(@RequestBody User user) {
         User dbUser = userRepository.findByPhone(user.getPhone());
         if (dbUser != null) {
-            JSONObject json = new JSONObject();
-            json.put("success", false);
-            json.put("msg", "该手机号码已注册!");
+            JSONObject res = new JSONObject();
+            res.put("success", false);
+            res.put("msg", "该手机号码已注册!");
 
-            return json;
+            return res;
         }
         String code = AliyunUtil.generateCode();
         CacheUtil.putData(user.getPhone(), code);
@@ -169,11 +169,11 @@ public class UserHandler {
     public JSONObject sendCodeExist(@RequestBody User user) {
         User dbUser = userRepository.findByPhone(user.getPhone());
         if (dbUser == null) {
-            JSONObject json = new JSONObject();
-            json.put("success", false);
-            json.put("msg", "该手机号码未注册!");
+            JSONObject res = new JSONObject();
+            res.put("success", false);
+            res.put("msg", "该手机号码未注册!");
 
-            return json;
+            return res;
         }
         String code = AliyunUtil.generateCode();
         CacheUtil.putData(user.getPhone(), code);
@@ -191,14 +191,14 @@ public class UserHandler {
      */
     @PostMapping("/reg")
     public JSONObject reg(@RequestBody RegUserDTO regUserDTO) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         String code = CacheUtil.getData(regUserDTO.getPhone());
         if (code == null) {
-            json.put("success", false);
-            json.put("msg", "验证码无效!");
+            res.put("success", false);
+            res.put("msg", "验证码无效!");
         } else if (!code.equals(regUserDTO.getCode())) {
-            json.put("success", false);
-            json.put("msg", "验证码错误!");
+            res.put("success", false);
+            res.put("msg", "验证码错误!");
         } else {
             User user = new User();
 
@@ -210,11 +210,11 @@ public class UserHandler {
 
             userRepository.save(user);
 
-            json.put("success", true);
-            json.put("msg", "注册成功!");
+            res.put("success", true);
+            res.put("msg", "注册成功!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -225,14 +225,14 @@ public class UserHandler {
      */
     @PostMapping("/reset_password")
     public JSONObject resetPassword(@RequestBody RegUserDTO regUserDTO) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         String code = CacheUtil.getData(regUserDTO.getPhone());
         if (code == null) {
-            json.put("success", false);
-            json.put("msg", "验证码无效!");
+            res.put("success", false);
+            res.put("msg", "验证码无效!");
         } else if (!code.equals(regUserDTO.getCode())) {
-            json.put("success", false);
-            json.put("msg", "验证码错误!");
+            res.put("success", false);
+            res.put("msg", "验证码错误!");
         } else {
             User user = new User();
 
@@ -241,11 +241,11 @@ public class UserHandler {
 
             userRepository.resetPassword(user);
 
-            json.put("success", true);
-            json.put("msg", "重置成功!");
+            res.put("success", true);
+            res.put("msg", "重置成功!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -256,20 +256,20 @@ public class UserHandler {
      */
     @PostMapping("/update_password")
     public JSONObject updatePassword(@RequestBody UpdatePasswordDTO updatePasswordDTO) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         User dbUser = userRepository.findById(authId);
 
         if (bCryptPasswordEncoder.matches(updatePasswordDTO.getOldPassword(), dbUser.getPassword())) {
             userRepository.updatePassword(authId, bCryptPasswordEncoder.encode(updatePasswordDTO.getNewPassword()));
-            json.put("success", true);
-            json.put("msg", "修改成功!");
+            res.put("success", true);
+            res.put("msg", "修改成功!");
         } else {
-            json.put("success", false);
-            json.put("msg", "当前密码错误!");
+            res.put("success", false);
+            res.put("msg", "当前密码错误!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -281,7 +281,7 @@ public class UserHandler {
      */
     @GetMapping("/star_post")
     public JSONObject starPost(@Param("id") int id, @Param("action") int action) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         Star star = new Star();
 
@@ -289,15 +289,15 @@ public class UserHandler {
         star.setPost_id(id);
         if (action == 0) {
             userRepository.unstarPost(star);
-            json.put("success", true);
-            json.put("msg", "取消成功!");
+            res.put("success", true);
+            res.put("msg", "取消成功!");
         } else {
             userRepository.starPost(star);
-            json.put("success", true);
-            json.put("msg", "收藏成功!");
+            res.put("success", true);
+            res.put("msg", "收藏成功!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -307,15 +307,15 @@ public class UserHandler {
      */
     @GetMapping("/get_stars")
     public JSONObject getStars() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
         List<Star> stars = userRepository.getStars(authId);
 
-        json.put("success", true);
-        json.put("stars", stars);
+        res.put("success", true);
+        res.put("stars", stars);
 
-        return json;
+        return res;
     }
 
 
@@ -326,13 +326,13 @@ public class UserHandler {
      */
     @GetMapping("get_level")
     public JSONObject getLevel() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         List<Level> levels = userRepository.getLevel();
 
-        json.put("success", true);
-        json.put("data", levels);
+        res.put("success", true);
+        res.put("data", levels);
 
-        return json;
+        return res;
     }
 }

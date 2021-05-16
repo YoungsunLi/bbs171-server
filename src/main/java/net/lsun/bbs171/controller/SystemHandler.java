@@ -31,14 +31,14 @@ public class SystemHandler {
      */
     @GetMapping("get_info")
     public JSONObject getInfo() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         SystemInfoDTO systemInfo = systemRepository.getInfo();
 
-        json.put("success", true);
-        json.put("data", systemInfo);
+        res.put("success", true);
+        res.put("data", systemInfo);
 
-        return json;
+        return res;
     }
 
     /**
@@ -48,19 +48,19 @@ public class SystemHandler {
      */
     @GetMapping("get_admin_users")
     public JSONObject getAdminUsers() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         if (auth(100)) {
             List<User> users = systemRepository.getAdminUsers();
 
-            json.put("success", true);
-            json.put("data", users);
+            res.put("success", true);
+            res.put("data", users);
         } else {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -70,31 +70,31 @@ public class SystemHandler {
      */
     @PostMapping("add_admin_user")
     public JSONObject addAdminUser(@RequestBody User user) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         if (auth(100)) {
             User dbUser = userRepository.findByPhone(user.getPhone());
 
             if (dbUser != null) {
                 if (dbUser.getRole() != 1) {
-                    json.put("success", false);
-                    json.put("msg", "用户 " + dbUser.getUsername() + " 已经是管理员!");
+                    res.put("success", false);
+                    res.put("msg", "用户 " + dbUser.getUsername() + " 已经是管理员!");
                 } else {
                     systemRepository.updateUserRoleToAdmin(user);
 
-                    json.put("success", true);
-                    json.put("msg", "添加成功!");
+                    res.put("success", true);
+                    res.put("msg", "添加成功!");
                 }
             } else {
-                json.put("success", false);
-                json.put("msg", "手机号为 " + user.getPhone() + " 的用户不存在!");
+                res.put("success", false);
+                res.put("msg", "手机号为 " + user.getPhone() + " 的用户不存在!");
             }
         } else {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         }
 
-        return json;
+        return res;
     }
 
 
@@ -105,7 +105,7 @@ public class SystemHandler {
      */
     @PostMapping("del_admin_user")
     public JSONObject delAdminUser(@RequestBody User user) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         if (auth(100)) {
             User dbUser = userRepository.findByPhone(user.getPhone());
@@ -114,22 +114,22 @@ public class SystemHandler {
                 if (dbUser.getRole() == 0) {
                     systemRepository.updateUserRoleToUser(user);
 
-                    json.put("success", true);
-                    json.put("msg", "删除成功!");
+                    res.put("success", true);
+                    res.put("msg", "删除成功!");
                 } else {
-                    json.put("success", false);
-                    json.put("msg", "用户 " + dbUser.getUsername() + " 不是普通管理员!");
+                    res.put("success", false);
+                    res.put("msg", "用户 " + dbUser.getUsername() + " 不是普通管理员!");
                 }
             } else {
-                json.put("success", false);
-                json.put("msg", "手机号为 " + user.getPhone() + " 的用户不存在!");
+                res.put("success", false);
+                res.put("msg", "手机号为 " + user.getPhone() + " 的用户不存在!");
             }
         } else {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -139,19 +139,19 @@ public class SystemHandler {
      */
     @PostMapping("add_category")
     public JSONObject addCategory(@RequestBody Category category) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         if (auth(100)) {
             systemRepository.addCategory(category);
 
-            json.put("success", true);
-            json.put("msg", "添加成功!");
+            res.put("success", true);
+            res.put("msg", "添加成功!");
         } else {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -161,26 +161,26 @@ public class SystemHandler {
      */
     @PostMapping("del_category")
     public JSONObject delCategory(@RequestBody Category category) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         if (auth(100)) {
             int count = systemRepository.getCategoryUseCount(category);
 
             if (count > 0) {
-                json.put("success", false);
-                json.put("msg", "删除失败: 该板块已关联 " + count + " 个帖子!");
+                res.put("success", false);
+                res.put("msg", "删除失败: 该板块已关联 " + count + " 个帖子!");
             } else {
                 systemRepository.delCategory(category);
 
-                json.put("success", true);
-                json.put("msg", "删除成功!");
+                res.put("success", true);
+                res.put("msg", "删除成功!");
             }
         } else {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -190,19 +190,19 @@ public class SystemHandler {
      */
     @PostMapping("update_category")
     public JSONObject updateCategory(@RequestBody Category category) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         if (auth(100)) {
             systemRepository.updateCategory(category);
 
-            json.put("success", true);
-            json.put("msg", "修改成功!");
+            res.put("success", true);
+            res.put("msg", "修改成功!");
         } else {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         }
 
-        return json;
+        return res;
     }
 
 
@@ -213,7 +213,7 @@ public class SystemHandler {
      */
     @GetMapping("get_users")
     public JSONObject getUsers(@Param("sort") int sort, @Param("status") int status, @Param("keywords") String keywords) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         if (auth(0)) {
             String sortStr;
@@ -230,14 +230,14 @@ public class SystemHandler {
 
             List<User> users = systemRepository.getUsers(sortStr, status, keywords);
 
-            json.put("success", true);
-            json.put("data", users);
+            res.put("success", true);
+            res.put("data", users);
         } else {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -247,26 +247,26 @@ public class SystemHandler {
      */
     @GetMapping("reset_password")
     public JSONObject resetPassword(@Param("id") int id) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         if (auth(0)) {
             User dbUser = userRepository.findById(id);
 
             if (dbUser.getRole() != 1) {
-                json.put("success", false);
-                json.put("msg", "非法操作!");
+                res.put("success", false);
+                res.put("msg", "非法操作!");
             } else {
                 String password = "123456";
                 systemRepository.resetPassword(id, new BCryptPasswordEncoder().encode(password));
 
-                json.put("success", true);
-                json.put("msg", dbUser.getUsername() + " 的密码已重置为: " + password);
+                res.put("success", true);
+                res.put("msg", dbUser.getUsername() + " 的密码已重置为: " + password);
             }
         } else {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -276,25 +276,25 @@ public class SystemHandler {
      */
     @GetMapping("update_user_status")
     public JSONObject updateUserStatus(@Param("id") int id, @Param("status") int status) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         if (auth(0)) {
             User dbUser = userRepository.findById(id);
 
             if (dbUser.getRole() != 1) {
-                json.put("success", false);
-                json.put("msg", "非法操作!");
+                res.put("success", false);
+                res.put("msg", "非法操作!");
             } else {
                 systemRepository.updateUserStatus(id, status);
 
-                json.put("success", true);
-                json.put("msg", "操作成功!");
+                res.put("success", true);
+                res.put("msg", "操作成功!");
             }
         } else {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         }
 
-        return json;
+        return res;
     }
 
 

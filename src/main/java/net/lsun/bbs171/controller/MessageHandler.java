@@ -31,23 +31,23 @@ public class MessageHandler {
      */
     @GetMapping("get_count")
     public JSONObject getCount() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         int count = messageRepository.findMessageCount(authId);
         User dbUser = userRepository.findById(authId);
-        json.put("success", true);
+        res.put("success", true);
 
         if (dbUser.getStatus() != 1) {
-            json.put("msg", "你已被限制登录!");
-            json.put("illegal", true);
+            res.put("msg", "你已被限制登录!");
+            res.put("illegal", true);
         } else {
             // 更新在线时间
             userRepository.updateLastTime(authId);
 
-            json.put("count", count);
+            res.put("count", count);
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -57,14 +57,14 @@ public class MessageHandler {
      */
     @GetMapping("read")
     public JSONObject read() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         List<Message> messages = messageRepository.findMessagesByUserId(authId);
 
-        json.put("success", true);
-        json.put("messages", messages);
+        res.put("success", true);
+        res.put("messages", messages);
 
-        return json;
+        return res;
     }
 
     /**
@@ -74,21 +74,21 @@ public class MessageHandler {
      */
     @GetMapping("remove")
     public JSONObject remove(@Param("id") int id) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         Message message = messageRepository.findMessageById(id);
 
         if (message == null || message.getUser_id() != authId) {
-            json.put("success", false);
-            json.put("msg", "消息不存在!");
+            res.put("success", false);
+            res.put("msg", "消息不存在!");
         } else {
             messageRepository.remove(id);
 
-            json.put("success", true);
-            json.put("msg", "删除成功!");
+            res.put("success", true);
+            res.put("msg", "删除成功!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -98,14 +98,14 @@ public class MessageHandler {
      */
     @GetMapping("remove_all")
     public JSONObject remove() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
         messageRepository.removeAll(authId);
 
-        json.put("success", true);
-        json.put("msg", "删除成功!");
+        res.put("success", true);
+        res.put("msg", "删除成功!");
 
-        return json;
+        return res;
     }
 }

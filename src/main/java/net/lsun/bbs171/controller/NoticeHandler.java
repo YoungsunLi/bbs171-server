@@ -28,23 +28,23 @@ public class NoticeHandler {
      */
     @PostMapping("/submit")
     public JSONObject submit(@RequestBody Notice notice) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
         int role = userRepository.findById(authId).getRole();
         if (role != 0) {
             // 非管理员
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         } else {
             notice.setUser_id(authId);
             noticeRepository.submit(notice);
 
-            json.put("success", true);
-            json.put("msg", "发布成功!");
+            res.put("success", true);
+            res.put("msg", "发布成功!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -54,14 +54,14 @@ public class NoticeHandler {
      */
     @GetMapping("/get_latest")
     public JSONObject getLatest() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         Notice notice = noticeRepository.getLatest();
 
-        json.put("success", true);
-        json.put("data", notice);
+        res.put("success", true);
+        res.put("data", notice);
 
-        return json;
+        return res;
     }
 
     /**
@@ -71,13 +71,13 @@ public class NoticeHandler {
      */
     @GetMapping("/get_all")
     public JSONObject getAll() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         List<Notice> notices = noticeRepository.getAll();
 
-        json.put("success", true);
-        json.put("data", notices);
+        res.put("success", true);
+        res.put("data", notices);
 
-        return json;
+        return res;
     }
 }

@@ -53,13 +53,13 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             return;
         }
 
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         String header = request.getHeader(JWTUtil.AUTHORIZATION);
 
         if (StringUtils.isBlank(header) || !header.startsWith(JWTUtil.TOKEN_PREFIX)) {
-            json.put("success", false);
-            json.put("msg", "请登录后操作!");
-            response.getWriter().write(JSON.toJSONString(json));
+            res.put("success", false);
+            res.put("msg", "请登录后操作!");
+            response.getWriter().write(JSON.toJSONString(res));
             return;
         }
         try {
@@ -68,34 +68,34 @@ public class JWTAuthenticationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
 
         } catch (ExpiredJwtException e) {
-            json.put("success", false);
-            json.put("msg", "请重新登录!");
-            response.getWriter().write(JSON.toJSONString(json));
+            res.put("success", false);
+            res.put("msg", "请重新登录!");
+            response.getWriter().write(JSON.toJSONString(res));
             logger.error("Token已过期: " + e);
         } catch (UnsupportedJwtException e) {
-            json.put("success", false);
-            json.put("msg", "Token格式错误");
-            response.getWriter().write(JSON.toJSONString(json));
+            res.put("success", false);
+            res.put("msg", "Token格式错误");
+            response.getWriter().write(JSON.toJSONString(res));
             logger.error("Token格式错误: " + e);
         } catch (MalformedJwtException e) {
-            json.put("success", false);
-            json.put("msg", "Token没有被正确构造");
-            response.getWriter().write(JSON.toJSONString(json));
+            res.put("success", false);
+            res.put("msg", "Token没有被正确构造");
+            response.getWriter().write(JSON.toJSONString(res));
             logger.error("Token没有被正确构造: " + e);
         } catch (SignatureException e) {
-            json.put("success", false);
-            json.put("msg", "Token签名失败");
-            response.getWriter().write(JSON.toJSONString(json));
+            res.put("success", false);
+            res.put("msg", "Token签名失败");
+            response.getWriter().write(JSON.toJSONString(res));
             logger.error("签名失败: " + e);
         } catch (IllegalArgumentException e) {
-            json.put("success", false);
-            json.put("msg", "Token非法参数异常");
-            response.getWriter().write(JSON.toJSONString(json));
+            res.put("success", false);
+            res.put("msg", "Token非法参数异常");
+            response.getWriter().write(JSON.toJSONString(res));
             logger.error("非法参数异常: " + e);
         } catch (Exception e) {
-            json.put("success", false);
-            json.put("msg", "Invalid Token");
-            response.getWriter().write(JSON.toJSONString(json));
+            res.put("success", false);
+            res.put("msg", "Invalid Token");
+            response.getWriter().write(JSON.toJSONString(res));
             logger.error("Invalid Token " + e.getMessage());
         }
     }

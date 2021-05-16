@@ -38,7 +38,7 @@ public class PostHandler {
      */
     @PostMapping("/submit")
     public JSONObject submit(@RequestBody Post post) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         post.setUser_id(authId);
 
@@ -47,12 +47,12 @@ public class PostHandler {
 
         postRepository.submit(post);
 
-        json.put("success", true);
-        json.put("msg", "发布成功!");
+        res.put("success", true);
+        res.put("msg", "发布成功!");
 
         userRepository.updateExperience(authId, 20);
 
-        return json;
+        return res;
     }
 
     /**
@@ -63,7 +63,7 @@ public class PostHandler {
      */
     @GetMapping("/detail")
     public JSONObject getPostForDetail(@Param("id") int id) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         String authIdStr = SecurityContextHolder.getContext().getAuthentication().getName();
         int authId = authIdStr.equals("anonymousUser") ? 0 : Integer.parseInt(authIdStr);
 
@@ -78,45 +78,45 @@ public class PostHandler {
                 views.setViewer_id(authId);
                 viewRepository.submit(views);
 
-                json.put("success", true);
-                json.put("data", post);
-                return json;
+                res.put("success", true);
+                res.put("data", post);
+                return res;
             } else { // 否则验证是否是管理员
                 if (authId != 0) {
                     int role = userRepository.findById(authId).getRole();
                     if (role == 0) {
-                        json.put("success", true);
-                        json.put("data", post);
-                        return json;
+                        res.put("success", true);
+                        res.put("data", post);
+                        return res;
                     }
                 }
             }
         }
 
-        json.put("success", false);
-        json.put("msg", "该帖子不存在!");
+        res.put("success", false);
+        res.put("msg", "该帖子不存在!");
 
-        return json;
+        return res;
     }
 
     /**
      * 查询帖子列表以及对应的作者信息(首页)
      *
-     * @param category 分类: 0=综合, 1=默认, 2=学习, 3=生活.
+     * @param category 分类: 自定义.
      * @param sort     排序方式: 0=按最新, 1=按热度, 2=按评论.
      * @param keywords 搜索标题关键字
      * @return 帖子列表
      */
     @GetMapping("/get_posts_for_index")
     public JSONObject getPostForIndex(@Param("category") int category, @Param("sort") int sort, @Param("keywords") String keywords) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         String sortStr = Util.parseSort(sort);
 
         List<PostForIndex> posts = postRepository.findPostsForIndex(category, sortStr, keywords);
-        json.put("success", true);
-        json.put("data", posts);
+        res.put("success", true);
+        res.put("data", posts);
 
-        return json;
+        return res;
     }
 
     /**
@@ -130,22 +130,22 @@ public class PostHandler {
      */
     @GetMapping("/get_posts_for_manage")
     public JSONObject getPostForManage(@Param("category") int category, @Param("sort") int sort, @Param("status") int status, @Param("keywords") String keywords) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         String sortStr = Util.parseSort(sort);
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         User dbUser = userRepository.findById(authId);
 
         if (dbUser.getRole() != 0) {
             // 非管理员
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         } else {
             List<PostForManage> posts = postRepository.findPostsForManage(category, sortStr, status, keywords);
-            json.put("success", true);
-            json.put("data", posts);
+            res.put("success", true);
+            res.put("data", posts);
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -157,7 +157,7 @@ public class PostHandler {
      */
     @GetMapping("/update_status")
     public JSONObject updateStatus(@Param("id") int id, @Param("status") int status) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
 
         int role = userRepository.findById(authId).getRole();
@@ -165,9 +165,9 @@ public class PostHandler {
         if (role != 0) {
             int postUserId = postRepository.findPostDetail(id, authId).getUser_id();
             if (authId != postUserId) {
-                json.put("success", false);
-                json.put("msg", "非法操作!");
-                return json;
+                res.put("success", false);
+                res.put("msg", "非法操作!");
+                return res;
             } else {
                 // 非管理员只能删除
                 status = 2;
@@ -175,10 +175,10 @@ public class PostHandler {
         }
 
         postRepository.updateStatus(id, status);
-        json.put("success", true);
-        json.put("msg", "操作成功!");
+        res.put("success", true);
+        res.put("msg", "操作成功!");
 
-        return json;
+        return res;
     }
 
     /**
@@ -190,21 +190,21 @@ public class PostHandler {
      */
     @GetMapping("/update_highlight")
     public JSONObject updateHighlight(@Param("id") int id, @Param("highlight") int highlight) {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
         int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
         int role = userRepository.findById(authId).getRole();
 
         if (role == 0) {
             postRepository.updateHighlight(id, highlight);
 
-            json.put("success", true);
-            json.put("msg", "设置成功!");
+            res.put("success", true);
+            res.put("msg", "设置成功!");
         } else {
-            json.put("success", false);
-            json.put("msg", "非法操作!");
+            res.put("success", false);
+            res.put("msg", "非法操作!");
         }
 
-        return json;
+        return res;
     }
 
     /**
@@ -214,14 +214,14 @@ public class PostHandler {
      */
     @GetMapping("/get_hot")
     public JSONObject getHot() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         List<PostForHot> posts = postRepository.getHot();
 
-        json.put("success", true);
-        json.put("data", posts);
+        res.put("success", true);
+        res.put("data", posts);
 
-        return json;
+        return res;
     }
 
     /**
@@ -231,13 +231,13 @@ public class PostHandler {
      */
     @GetMapping("get_category")
     public JSONObject getCategory() {
-        JSONObject json = new JSONObject();
+        JSONObject res = new JSONObject();
 
         List<Category> categorys = postRepository.getCategory();
 
-        json.put("success", true);
-        json.put("data", categorys);
+        res.put("success", true);
+        res.put("data", categorys);
 
-        return json;
+        return res;
     }
 }
