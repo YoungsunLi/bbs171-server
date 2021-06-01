@@ -120,6 +120,28 @@ public class PostHandler {
     }
 
     /**
+     * 查询帖子列表以及对应的作者信息(首页)分页加载
+     *
+     * @param pageIndex 当前页
+     * @param pageSize  分页大小
+     * @param category  分类: 自定义.
+     * @param sort      排序方式: 0=按最新, 1=按热度, 2=按评论.
+     * @param keywords  搜索标题关键字
+     * @return 帖子列表
+     */
+    @GetMapping("/get_posts_for_index_by_page")
+    public JSONObject getPostForIndex(@Param("pageIndex") int pageIndex, @Param("pageSize") int pageSize, @Param("category") int category, @Param("sort") int sort, @Param("keywords") String keywords) {
+        JSONObject res = new JSONObject();
+        String sortStr = Util.parseSort(sort);
+
+        List<PostForIndex> posts = postRepository.findPostsForIndexByPage(pageIndex * pageSize, pageSize, category, sortStr, keywords);
+        res.put("success", true);
+        res.put("data", posts);
+
+        return res;
+    }
+
+    /**
      * 查询帖子列表以及对应的作者信息(管理帖子页)
      *
      * @param category 板块: 自定义.

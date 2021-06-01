@@ -39,6 +39,36 @@
         order by ${sort} desc
     </select>
 
+    <select id="findPostsForIndexByPage" resultType="PostForIndex">
+        select posts.id,
+        posts.title,
+        posts.datetime,
+        posts.category,
+        (select category_name
+        from category
+        where posts.category = category.id) as category_name,
+        posts.views,
+        posts.comment,
+        posts.highlight,
+        posts.user_id,
+        users.username,
+        users.avatar,
+        (select level_name
+        from level
+        where users.experience >= experience
+        order by experience desc
+        limit 1 ) as level_name
+        from posts
+        inner join users on users.id = posts.user_id and posts.status = 1
+        <if test="category != 0">
+            and category = #{category}
+        </if>
+        <if test="keywords != ''">
+            and title REGEXP #{keywords}
+        </if>
+        order by ${sort} desc limit #{pageIndex}, #{pageSize}
+    </select>
+
     <select id="findPostsForManage" resultType="PostForManage">
         select posts.id,
         posts.title,

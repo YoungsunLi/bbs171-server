@@ -10,6 +10,8 @@ public interface PostRepository {
 
     List<PostForIndex> findPostsForIndex(@Param("category") int category, @Param("sort") String sort, @Param("keywords") String keywords);
 
+    List<PostForIndex> findPostsForIndexByPage(@Param("pageIndex") int pageIndex, @Param("pageSize") int pageSize, @Param("category") int category, @Param("sort") String sort, @Param("keywords") String keywords);
+
     List<PostForManage> findPostsForManage(@Param("category") int category, @Param("sort") String sort, @Param("status") int status, @Param("keywords") String keywords);
 
     List<PostForUserHome> findPostsForUserHome(@Param("user_id") int user_id);

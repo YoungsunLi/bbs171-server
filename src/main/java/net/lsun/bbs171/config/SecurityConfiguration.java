@@ -23,6 +23,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
             "/post/get_posts_for_index",
+            "/post/get_posts_for_index_by_page",
             "/post/get_hot",
             "/post/get_category",
 
