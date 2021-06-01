@@ -7,7 +7,7 @@
     <select id="getInfo" resultType="SystemInfoDTO">
         select count(users.id)                                                                     as totalUsers,
                count(if(timediff(now(), users.lastTime) &lt; '00:10:00', 1, null))                 as totalOnlineUsers,
-               (select count(id) from posts where status = 1)                                                       as totalPosts,
+               (select count(id) from posts where status = 1)                                      as totalPosts,
                (select count(id) from posts where timediff(now(), posts.datetime) &lt; '24:00:00') as totalNewPosts
         from users
     </select>
