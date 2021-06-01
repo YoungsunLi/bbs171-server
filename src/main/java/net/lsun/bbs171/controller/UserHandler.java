@@ -318,6 +318,23 @@ public class UserHandler {
         return res;
     }
 
+    /**
+     * 获取用户帖子列表
+     *
+     * @return posts
+     */
+    @GetMapping("/get_posts")
+    public JSONObject getPosts() {
+        JSONObject res = new JSONObject();
+        int authId = Integer.parseInt(SecurityContextHolder.getContext().getAuthentication().getName());
+
+        List<Post> posts = userRepository.getPosts(authId);
+
+        res.put("success", true);
+        res.put("posts", posts);
+
+        return res;
+    }
 
     /**
      * 获取等级信息

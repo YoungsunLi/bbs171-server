@@ -1,6 +1,7 @@
 package net.lsun.bbs171.repository;
 
 import net.lsun.bbs171.entity.Level;
+import net.lsun.bbs171.entity.Post;
 import net.lsun.bbs171.entity.Star;
 import net.lsun.bbs171.entity.User;
 
@@ -28,6 +29,8 @@ public interface UserRepository {
     void unstarPost(Star star);
 
     List<Star> getStars(int id);
+
+    List<Post> getPosts(int authId);
 
     void updateLastTime(int id);
 

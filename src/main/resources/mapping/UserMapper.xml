@@ -79,6 +79,12 @@
         where stars.user_id = #{id}
     </select>
 
+    <select id="getPosts" parameterType="int" resultType="Post">
+        select *
+        from posts
+        where user_id = #{id} and status = 1
+    </select>
+
     <update id="updateLastTime" parameterType="int">
         update users
         set lastTime = now()
